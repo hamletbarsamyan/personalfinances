@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+</head>
+
+<body>
+<div th:fragment="eventResultsList" class="table responsive">
+    <div th:if="${#lists.isEmpty(page.content)}">
+        <span th:text="#{table.no.items.found}"></span>
+    </div>
+    <table class="table table-striped table-bordered table-hover" th:unless="${#lists.isEmpty(page.content)}">
+        <thead>
+        <tr>
+            <th class="col-xs-1" data-th-text="#{event.event_type}"></th>
+            <th class="col-xs-8" data-th-text="#{event.message}"></th>
+            <th class="col-xs-1" data-th-text="#{event.performed_by}"></th>
+            <th class="col-xs-2" data-th-text="#{event.created_date}"></th>
+        </tr>
+        </thead>
+        <tbody>
+            <tr data-th-each="event : ${page.content}">
+                <td data-th-text="${event.eventType}">eventType</td>
+                <td data-th-text="${event.message}">message</td>
+                <td data-th-text="${event.performedBy}">performedBy</td>
+                <td data-th-text="${event.createdAt}">createdAt</td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="row">
+        <div class="col-xs-6">
+            <span th:text="#{table.total.records(${page.dataCount})}"></span>
+        </div>
+        <div class="col-xs-6">
+            <div class="dataTables_paginate paging_simple_numbers" id="dynamic-table_paginate">
+                <ul class="pagination">
+                    <li th:class="${page.firstPageEnabled} ? '' : 'disabled'">
+                        <span th:if="${not page.firstPageEnabled}">&laquo;</span>
+                        <a th:if="${page.firstPageEnabled}" title="First page"
+                           href="javascript:void(0);" th:onclick="'javascript:loadEvents(1)'">&laquo;</a>
+                    </li>
+                    <li th:class="${page.previousPageEnabled} ? '' : 'disabled'">
+                        <span th:if="${not page.previousPageEnabled}">&lsaquo;</span>
+                        <a th:if="${page.previousPageEnabled}" title="Previous Page" href="javascript:void(0);"
+                           th:onclick="'javascript:loadEvents(' + ${page.currentPage - 1} + ')'">&lsaquo;</a>
+                    </li>
+                    <li th:each="item : ${page.items}" th:class="${item.current}? 'active' : ''">
+                        <span th:if="${item.current}" th:text="${item.number}">1</span>
+                        <a th:if="${not item.current}" href="javascript:void(0);" th:onclick="'javascript:loadEvents('+ ${item.number} + ')'">
+                            <span th:text="${item.number}">1</span>
+                        </a>
+                    </li>
+                    <li th:class="${page.nextPageEnabled}? '' : 'disabled'">
+                        <span th:if="${not page.nextPageEnabled}">&rsaquo;</span>
+                        <a th:if="${page.nextPageEnabled}" title="Go to next page"
+                           href="javascript:void(0);" th:onclick="'javascript:loadEvents('+ ${page.currentPage + 1} + ')'">&rsaquo;</a>
+                    </li>
+                    <li th:class="${page.lastPageEnabled} ? '' : 'disabled'">
+                        <span th:if="${not page.lastPageEnabled}">&raquo;</span>
+                        <a th:if="${page.lastPageEnabled}" title="Last Page"
+                           href="javascript:void(0);" th:onclick="'javascript:loadEvents(' + ${page.totalPages} + ')'">&raquo;</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        function loadEvents(page) {
+            var url = 'loadEvents?page=' + page
+                    + '&eventType=' + $('#eventType option:selected').val()
+                    + '&performedBy=' + $('#performedBy option:selected').val()
+                    + '&createdAtStart=' + $('#createdAtStart').val()
+                    + '&createdAtEnd=' + $('#createdAtEnd').val()
+                    + '&message=' + $('#message').val();
+            $("#resultsBlock").html('<i class="ace-icon fa fa-spinner fa-spin orange bigger-125"></i>').load(url);
+        }
+    </script>
+</div>
+</body>
+</html>
+
+

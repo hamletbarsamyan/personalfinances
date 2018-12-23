@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:th="http://www.thymeleaf.org">
+
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+        <meta charset="utf-8" />
+        <title th:text="#{user.registration}"></title>
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+
+        <link type="text/css" rel="stylesheet" href="/css/bootstrap.min.css"
+              data-th-href="@{/css/bootstrap.min.css}"/>
+
+        <link type="text/css" rel="stylesheet" href="/font-awesome/4.7.0/css/font-awesome.min.css"
+              data-th-href="@{/font-awesome/4.7.0/css/font-awesome.min.css}"/>
+
+        <!-- text fonts -->
+        <link rel="stylesheet" href="/fonts/fonts.googleapis.com.css"
+              data-th-href="@{/fonts/fonts.googleapis.com.css}"/>
+
+        <!-- ace styles -->
+        <link rel="stylesheet" href="/css/ace.min.css" class="ace-main-stylesheet" id="main-ace-style"
+              data-th-href="@{/css/ace.min.css}"/>
+
+        <!-- common styles -->
+        <link rel="stylesheet" href="/css/common.css" class="ace-main-stylesheet" id="common-style"
+              data-th-href="@{/css/common.css}"/>
+
+        <!--[if lte IE 9]>
+        <link rel="stylesheet" href="/css/ace-part2.min.css" class="ace-main-stylesheet"
+              data-th-href="@{/css/ace-part2.min.css}"/>
+        <![endif]-->
+
+        <!--[if lte IE 9]>
+        <link rel="stylesheet" href="/css/ace-ie.min.css"
+              data-th-href="@{/css/ace-ie.min.css}"/>
+        <![endif]-->
+
+        <link rel="stylesheet" href="/css/datepicker.min.css"
+              data-th-href="@{/css/datepicker.min.css}"/>
+    </head>
+
+<body>
+    <div class="main-container" id="main-container">
+        <div class="main-content">
+            <div class="page-content">
+                <div class="row">
+                    <div class="col-lg-8">
+                        <div class="center">
+                            <h4 class="blue" id="id-company-text" th:text="#{common.company}"></h4>
+                        </div>
+                        <h4 class="page-header">
+                            <small>
+                                <span data-th-text="#{user.registration}"></span>
+                            </small>
+                        </h4>
+                        <div class="col-sm-6">
+                            <form class="form-horizontal" action="#" data-th-action="@{/user-public/register}" data-th-object="${user}"
+                                  method="post">
+                                <div class="alert alert-danger alert-dismissable" th:if="${error != null}">
+                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                                    <p data-th-text="${error}">Error!</p>
+                                </div>
+                                <div class="form-group required">
+                                    <label class="col-sm-5 control-label" data-th-text="#{user.login}"></label>
+                                    <div class="col-sm-7">
+                                        <div class="input-group">
+                                            <span class="input-group-addon">
+                                                <i class="ace-icon fa fa-user"></i>
+                                            </span>
+                                            <input type="text" class="form-control" data-th-value="*{login}" data-th-field="*{login}"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group required">
+                                    <label class="col-sm-5 control-label" data-th-text="#{user.password}"></label>
+                                    <div class="col-sm-7">
+                                        <div class="input-group">
+                                            <span class="input-group-addon">
+                                                <i class="ace-icon fa fa-key"></i>
+                                            </span>
+                                            <input type="password" class="form-control"
+                                                   data-th-value="*{password}" data-th-field="*{password}"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group required">
+                                    <label class="col-sm-5 control-label" data-th-text="#{user.confirm.password}"></label>
+                                    <div class="col-sm-7">
+                                        <div class="input-group">
+                                            <span class="input-group-addon">
+                                                <i class="ace-icon fa fa-key"></i>
+                                            </span>
+                                            <input type="password" class="form-control"
+                                                   data-th-value="*{confirmPassword}" data-th-field="*{confirmPassword}"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-5 control-label" data-th-text="#{user.first_name}"></label>
+                                    <div class="col-sm-7">
+                                        <input type="text" class="form-control" data-th-value="*{firstName}" data-th-field="*{firstName}"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-5 control-label" data-th-text="#{user.last_name}"></label>
+                                    <div class="col-sm-7">
+                                        <input type="text" class="form-control" data-th-value="*{lastName}" data-th-field="*{lastName}"/>
+                                    </div>
+                                </div>
+                                <div class="form-group required">
+                                    <label class="col-sm-5 control-label" data-th-text="#{user.email}"></label>
+                                    <div class="col-sm-7">
+                                        <div class="input-group">
+                                            <span class="input-group-addon">
+                                                <i class="ace-icon fa fa-envelope"></i>
+                                            </span>
+                                            <input type="text" class="form-control"
+                                                   data-th-value="*{email}" data-th-field="*{email}"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-5 control-label" data-th-text="#{user.phone}"></label>
+                                    <div class="col-sm-7">
+                                        <div class="input-group">
+                                            <span class="input-group-addon">
+                                                <i class="ace-icon fa fa-phone"></i>
+                                            </span>
+                                            <input type="text" class="form-control input-mask-phone"
+                                                   data-th-value="*{phone}" data-th-field="*{phone}"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-sm-offset-5 col-sm-7">
+                                        <a href="#" class="btn btn-xs btn-default" data-th-href="@{/user/list}" th:text="#{button.back}"></a>
+                                        &#160;
+                                        <button type="submit" class="pull-right btn btn-xs btn-primary" data-th-text="#{user.register}">register</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>  <!-- /.col-lg-12 -->
+                </div><!-- /.page-content -->
+            </div>
+        </div>
+    </div>
+
+    <!-- basic scripts -->
+
+    <!--[if !IE]> -->
+    <script src="/js/jquery-2.1.4.min.js" data-th-src="@{/js/jquery-2.1.4.min.js}"></script>
+
+    <!-- <![endif]-->
+
+    <!--[if IE]>
+    <script src="/js/jquery.1.11.1.min.js" data-th-src="@{/js/jquery.1.11.1.min.js}"></script>
+    <![endif]-->
+
+    <!--[if !IE]> -->
+    <script type="text/javascript">
+        window.jQuery || document.write("<script src='/js/jquery.min.js'>"+"<"+"/script>");
+    </script>
+
+    <!-- <![endif]-->
+
+    <!--[if IE]>
+    <script type="text/javascript">
+        window.jQuery || document.write("<script src='../../js/jquery1x.min.js'>"+"<"+"/script>");
+    </script>
+    <![endif]-->
+    <script type="text/javascript">
+        if('ontouchstart' in document.documentElement) document.write("<script src='/js/jquery.mobile.custom.min.js'>"+"<"+"/script>");
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+</head>
+
+<body>
+<div th:fragment="reminderFormDiv">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h5 class="modal-title" th:text="#{reminder.details}">
+            </h5>
+        </div>
+        <div class="modal-body">
+            <div class="profile-user-info profile-user-info-striped">
+                <div class="profile-info-row">
+                    <div class="profile-info-name">
+                        <span th:text="#{transaction.type}"></span>
+                    </div>
+                    <div class="profile-info-value">
+                        <span th:class="${'badge ' + (reminder.expense ? 'badge-pink' : (reminder.income ? 'badge-success' : ''))}"
+                              th:text="#{'transaction.type.' + ${reminder.transactionType}}">
+                        </span>
+                    </div>
+                </div>
+                <div class="profile-info-row">
+                    <div class="profile-info-name">
+                        <span th:text="#{reminder.status}"></span>
+                    </div>
+                    <div class="profile-info-value">
+                        <span th:class="${'label ' + (reminder.done ? 'label-success' : (reminder.active ? 'label-warning' : 'label-danger'))}"
+                              th:text="#{'reminder.status.' + ${reminder.status}}">
+                         </span>
+                    </div>
+                </div>
+                <div class="profile-info-row">
+                    <div class="profile-info-name">
+                        <span th:text="#{reminder.repeat}"></span>
+                    </div>
+                    <div class="profile-info-value">
+                        <span th:text="#{'reminder.repeat.' + ${reminder.repeat}}">
+                         </span>
+                    </div>
+                </div>
+                <div class="profile-info-row">
+                    <div class="profile-info-name">
+                        <span th:text="#{reminder.auto.charge}"></span>
+                    </div>
+                    <div class="profile-info-value" style="font-family: 'FontAwesome';">
+                        <span th:if="${reminder.autoCharge}" class="fa-check-square-o green"></span>
+                        <span th:unless="${reminder.autoCharge}" class="fa-square-o"></span>
+                    </div>
+                </div>
+
+                <div class="profile-info-row">
+                    <div class="profile-info-name">
+                        <span th:text="#{reminder.due.date}"></span>
+                    </div>
+                    <div class="profile-info-value">
+                        <div th:title="${#personalfinances.prettyTime(reminder.dueDate)}">
+                            <span>
+                                <i class="ace-icon fa fa-calendar bigger-110"></i>
+                                <span th:text="${#dates.format(reminder.dueDate, 'MMM dd, yyyy')}"></span>
+                            </span>&#160;&#160;
+                            <span>
+                                <i class="ace-icon fa fa-clock-o bigger-110"></i>
+                                <span th:text="${#dates.format(reminder.dueDate, 'HH:mm')}"></span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-info-row">
+                    <div class="profile-info-name">
+                        <span th:text="#{transaction.account}"></span>
+                    </div>
+                    <div class="profile-info-value">
+                        <span th:style="'background-color:' + ${reminder.accountColor}" class="label">
+                            <span th:utext="${reminder.accountIcon}" style="font-family: 'FontAwesome';"></span>
+                            <span th:text="' ' + ${reminder.account} + ' ' + ${reminder.symbol}"></span>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="profile-info-row">
+                    <div class="profile-info-name">
+                        <span th:text="#{transaction.category}"></span>
+                    </div>
+                    <div style="padding-left:10px; padding-top:3px; padding-bottom: 3px; border-top:1px dotted #DCEBF7;">
+                        <div th:if="${reminder.parentCategory != null}" th:remove="tag">
+                            <span class="categoryCircle" th:style="'background-color:' + ${reminder.parentCategoryColor}"
+                                  th:if="${!#strings.isEmpty(reminder.parentCategoryIcon)}">
+                                <span th:utext="${reminder.parentCategoryIcon}"></span>
+                            </span>
+                            <span class="categoryLabel" th:text="${reminder.parentCategory}"></span>
+                            <span class="categoryLabel">  >  </span>
+                        </div>
+                        <span class="categoryCircle" th:style="'background-color:' + ${reminder.categoryColor}"
+                              th:if="${!#strings.isEmpty(reminder.categoryIcon)}">
+                             <span th:utext="${reminder.categoryIcon}"></span>
+                        </span>
+                        <span class="categoryLabel" th:text="${reminder.category}"></span>
+                    </div>
+                </div>
+
+                <div class="profile-info-row">
+                    <div class="profile-info-name">
+                        <span th:text="#{common.amount}"></span>
+                    </div>
+                    <div class="profile-info-value">
+                        <b th:class="${!reminder.transfer ? reminder.transactionTypeClass : 'trType1'}"
+                           th:title="#{'transaction.type.' + ${reminder.transactionType}}">
+                            <span th:inline="text">[[${#numbers.formatDecimal(reminder.amount, 0, 'DEFAULT', 2, 'DEFAULT')}]]</span>
+                            <span th:text="${reminder.symbol}"></span>
+                        </b>
+                    </div>
+                </div>
+
+                <div id="transferDiv" th:if="${reminder.transfer}" th:remove="tag">
+                    <div class="profile-info-row">
+                        <div class="profile-info-name">
+                            <span th:text="#{transaction.target_account}"></span>
+                        </div>
+                        <div class="profile-info-value">
+                        <span th:style="'background-color:' + ${reminder.targetAccountColor}" class="label">
+                            <span th:utext="${reminder.targetAccountIcon}" style="font-family: 'FontAwesome';"></span>
+                            <span th:text="' ' + ${reminder.targetAccount} + ' ' + ${reminder.targetAccountSymbol}"></span>
+                        </span>
+                        </div>
+                    </div>
+                    <div class="profile-info-row">
+                        <div class="profile-info-name">
+                            <span th:text="#{common.currency.rate}"></span>
+                        </div>
+                        <div class="profile-info-value">
+                            <b class="trType2">
+                                <span th:inline="text">[[${#numbers.formatDecimal(reminder.exchangeRate, 0, 'DEFAULT', 2, 'DEFAULT')}]]</span>
+                            </b>
+                        </div>
+                    </div>
+
+                    <div class="profile-info-row">
+                        <div class="profile-info-name">
+                            <span th:text="#{transaction.converted_amount}"></span>
+                        </div>
+                        <div class="profile-info-value">
+                            <b class="trType2">
+                                <span th:inline="text">[[${#numbers.formatDecimal(reminder.convertedAmount, 0, 'DEFAULT', 2, 'DEFAULT')}]]</span>
+                                <span th:text="${reminder.targetAccountSymbol}"></span>
+                            </b>
+                        </div>
+                    </div>
+                </div>
+                <div class="profile-info-row" th:if="${reminder.contact != null}">
+                    <div class="profile-info-name">
+                        <span th:text="#{transaction.contact}"></span>
+                    </div>
+                    <div class="profile-info-value">
+                        <span id="contactName" th:text="${reminder.contact}"></span>
+                    </div>
+                </div>
+
+                <div class="profile-info-row" th:if="${!#strings.isEmpty(reminder.description)}">
+                    <div class="profile-info-name">
+                        <span th:text="#{transaction.description}"></span>
+                    </div>
+                    <div class="profile-info-value">
+                        <span th:text="${reminder.description}"></span>
+                    </div>
+                </div>
+            </div>
+            <br/>
+            <div class="accordion-style1 panel-group" id="accordion" style="width: calc(100% - 24px);display: table;margin: 0 auto;">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h5 class="panel-title">
+                            <a href="#collapseOne" data-parent="#accordion" data-toggle="collapse" class="accordion-toggle collapsed" aria-expanded="false"
+                               th:onclick="'loadReminderTransactions(' + ${reminder.id} + ');'">
+                                <i data-icon-show="ace-icon fa fa-angle-right" data-icon-hide="ace-icon fa fa-angle-down" class="bigger-110 ace-icon fa fa-angle-right"></i>
+                                &nbsp;<span th:text="#{transaction.transactions}"></span>
+                            </a>
+                        </h5>
+                    </div>
+
+                    <div id="collapseOne" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
+                        <div id="transactionsDiv" class="panel-body">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-xs btn-default" data-dismiss="modal" th:text="#{button.cancel}"></button>
+        </div>
+    </div>
+    <form id="transactionsForm" method="post" action="#" data-th-action="@{/transactions}">
+        <input id="reminderId" type="hidden" name="reminderId"/>
+    </form>
+    <script type="text/javascript">
+        var transactionsLoaded = false;
+        function loadReminderTransactions(id) {
+            if (!transactionsLoaded) {
+                $('#transactionsForm').find('#reminderId').val(id);
+                $('#transactionsDiv').html('<tr><td align="center" colspan="4"><div class="cp-spinner cp-skeleton"></div></td></tr>');
+
+                $.ajax({
+                    type : "POST",
+                    url : "../reminder/transactions",
+                    data: $('#transactionsForm').serialize(),
+                    success : function(data) {
+                        $('#transactionsDiv').html(data);
+                    }
+                });
+                transactionsLoaded = true;
+            }
+        }
+    </script>
+</div>
+</body>
+</html>
+
+

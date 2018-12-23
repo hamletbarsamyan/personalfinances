@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+</head>
+
+<body>
+<div th:fragment="transactionResultsList" th:remove="tag">
+    <div class="table responsive">
+        <table class="table table-sm table-striped table-hover table-bordered">
+            <tbody>
+                <tr data-th-each="transaction : ${transactions}">
+                    <td class="col-xs-5">
+                        <div th:if="${transaction.parentCategory != null}" th:remove="tag">
+                            <span class="categoryCircle" th:style="'background-color:' + ${transaction.parentCategoryColor}"
+                                  th:if="${!#strings.isEmpty(transaction.parentCategoryIcon)}">
+                                <span th:utext="${transaction.parentCategoryIcon}"></span>
+                            </span>
+                            <span class="categoryLabel" th:text="${transaction.parentCategory}"></span>
+                            <span class="categoryLabel">  >  </span>
+                        </div>
+                        <span class="categoryCircle" th:style="'background-color:' + ${transaction.categoryColor}"
+                              th:if="${!#strings.isEmpty(transaction.categoryIcon)}">
+                             <span th:utext="${transaction.categoryIcon}"></span>
+                        </span>
+                        <span class="categoryLabel" th:text="${transaction.category}"></span>
+                    </td>
+                    <td th:title="${#personalfinances.prettyTime(transaction.transactionDate)}" th:unless="${#lists.isEmpty(transactions)}"
+                        lass="col-xs-5">
+                        <span>
+                            <i class="ace-icon fa fa-calendar bigger-110"></i>
+                            <span th:text="${#dates.format(transaction.transactionDate, 'MMM dd, yyyy')}"></span>
+                        </span>&#160;&#160;
+                                <span>
+                            <i class="ace-icon fa fa-clock-o bigger-110"></i>
+                            <span th:text="${#dates.format(transaction.transactionDate, 'HH:mm')}"></span>
+                        </span>
+                    </td>
+                    <td align="right" class="col-xs-2">
+                        <b th:class="${transaction.transactionTypeClass}"
+                           th:title="#{'transaction.type.' + ${transaction.transactionType}}">
+                            <span th:inline="text">[[${#numbers.formatDecimal(transaction.amount, 0, 'DEFAULT', 2, 'DEFAULT')}]]</span>
+                            <span th:text="${transaction.symbol}"></span>
+                        </b>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(transactions)}">
+                    <td colspan="4">
+                        <span th:text="#{table.no.items.found}"></span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>
+
+

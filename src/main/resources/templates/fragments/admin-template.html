@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+
+<head th:fragment="head">
+    <meta charset="utf-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="description" content="Spring &amp; Thymeleaf"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta name="ctx" th:content="${#httpServletRequest.getContextPath()}" />
+
+    <!-- bootstrap & fontawesome -->
+    <link type="text/css" rel="stylesheet" href="/css/bootstrap.min.css"
+          data-th-href="@{/css/bootstrap.min.css}"/>
+
+    <link type="text/css" rel="stylesheet" href="/font-awesome/4.7.0/css/font-awesome.min.css"
+          data-th-href="@{/font-awesome/4.7.0/css/font-awesome.min.css}"/>
+
+    <!-- text fonts -->
+    <link rel="stylesheet" href="/fonts/fonts.googleapis.com.css"
+          data-th-href="@{/fonts/fonts.googleapis.com.css}"/>
+
+    <!-- ace styles -->
+    <link rel="stylesheet" href="/css/ace.min.css" class="ace-main-stylesheet" id="main-ace-style"
+          data-th-href="@{/css/ace.min.css}"/>
+
+    <!-- common styles -->
+    <link rel="stylesheet" href="/css/common.css" class="ace-main-stylesheet" id="common-style"
+          data-th-href="@{/css/common.css}"/>
+
+    <!--[if lte IE 9]>
+    <link rel="stylesheet" href="/css/ace-part2.min.css" class="ace-main-stylesheet"
+          data-th-href="@{/css/ace-part2.min.css}"/>
+    <![endif]-->
+
+    <!--[if lte IE 9]>
+    <link rel="stylesheet" href="/css/ace-ie.min.css"
+          data-th-href="@{/css/ace-ie.min.css}"/>
+    <![endif]-->
+
+    <link rel="stylesheet" href="/css/datepicker.min.css"
+          data-th-href="@{/css/datepicker.min.css}"/>
+
+    <!-- inline styles related to this page -->
+    <title th:text="#{admin.page.title}"></title>
+</head>
+
+<body class="no-skin">
+<div data-th-fragment="navbar" id="navbar" class="navbar navbar-default">
+    <div class="navbar-container" id="navbar-container">
+        <button type="button" class="navbar-toggle menu-toggler pull-left" id="menu-toggler" data-target="#sidebar">
+            <span class="sr-only">Toggle sidebar</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+
+        <div class="navbar-header pull-left">
+            <a href="#" data-th-href="@{/admin}" class="navbar-brand">
+                <small>
+                    <i class="fa fa-money"></i>
+                    <span th:text="#{admin.page.title}"></span>
+                </small>
+            </a>
+        </div>
+
+        <div class="navbar-buttons navbar-header pull-right" role="navigation">
+            <ul class="nav ace-nav">
+                <li class="light-blue">
+                    <a data-toggle="dropdown" href="#" class="dropdown-toggle">
+                        <span class="user-info">
+                            <small th:text="#{top.menu.welcome}"></small>&#160;
+                            <span sec:authentication="name"></span>
+                        </span>
+                        <i class="ace-icon fa fa-caret-down"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div><!-- /.navbar-container -->
+</div>
+
+<div class="main-container" id="main-container">
+    <div data-th-fragment="sidebar" id="sidebar" class="sidebar responsive">
+        <ul class="nav nav-list" th:with="requestURL=${#httpServletRequest.requestURL.toString()}">
+            <li class="">
+                <a href="#" data-th-href="@{/admin}">
+                    <i class="menu-icon fa fa-tachometer"></i>
+                    <span class="menu-text" th:text="#{menu.home}">Home</span>
+                </a>
+
+                <b class="arrow"></b>
+            </li>
+
+            <li class="active open"
+                th:class="${(requestURL.contains('user'))}
+                                    or ${(requestURL.contains('event'))} ? 'active open'">
+                <a href="#" class="dropdown-toggle">
+                    <i class="menu-icon fa fa-lock fa-fw"></i>
+                    <span class="menu-text" th:text="#{menu.system}"> System </span>
+                    <b class="arrow fa fa-angle-down"></b>
+                </a>
+                <b class="arrow"></b>
+                <ul class="submenu">
+                    <li th:class="${(requestURL.contains('user'))} ? 'active'">
+                        <a href="#" data-th-href="@{/user/list}">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            <span th:text="#{menu.users}"></span>
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+
+                    <li th:class="${(requestURL.contains('event'))} ? 'active'">
+                        <a href="#" data-th-href="@{/event/list}">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            <span th:text="#{menu.events}"></span>
+                        </a>
+
+                        <b class="arrow"></b>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="#" data-th-href="@{/logout}">
+                    <i class="menu-icon fa fa-power-off"></i>
+                    <span class="menu-text" th:text="#{menu.log_out}">log_out</span>
+                </a>
+            </li>
+        </ul><!-- /.nav-list -->
+
+        <div class="sidebar-toggle sidebar-collapse" id="sidebar-collapse">
+            <i class="ace-icon fa fa-angle-double-left" data-icon1="ace-icon fa fa-angle-double-left"
+               data-icon2="ace-icon fa fa-angle-double-right"></i>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="main-content-inner">
+            <div class="breadcrumbs" id="breadcrumbs">
+                <ul class="breadcrumb">
+                    <li>
+                        <i class="ace-icon fa fa-home home-icon"></i>
+                        <a href="#" data-th-href="@{/admin}">Home</a>
+                    </li>
+                </ul><!-- /.breadcrumb -->
+            </div>
+
+            <div class="page-content">
+                <div class="page-header">
+                </div><!-- /.page-header -->
+
+                <div class="row">
+
+                </div><!-- /.page-content -->
+            </div>
+        </div><!-- /.main-content -->
+
+        <div class="footer" th:fragment="footer">
+            <div class="footer-inner">
+                <div class="footer-content">
+                    <span class="bigger-120">
+                        <span class="blue bolder" th:text="#{common.company}"></span>
+                         &copy; 2018
+                    </span>
+                </div>
+            </div>
+
+
+            <!-- ace settings handler -->
+            <script src="/js/ace-extra.min.js" data-th-src="@{/js/ace-extra.min.js}"></script>
+
+            <!-- HTML5shiv and Respond.js for IE8 to support HTML5 elements and media queries -->
+
+            <!--[if lte IE 8]>
+            <script src="/js/html5shiv.min.js" data-th-src="@{/js/html5shiv.min.js}"></script>
+            <script src="/js/respond.min.js" data-th-src="@{/js/respond.min.js}"></script>
+            <![endif]-->
+
+            <!-- basic scripts -->
+
+            <!--[if !IE]> -->
+            <script src="/js/jquery-2.1.4.min.js"
+                    data-th-src="@{/js/jquery-2.1.4.min.js}"></script>
+
+            <script src="/js/bootstrap-datepicker.min.js" data-th-src="@{/js/bootstrap-datepicker.min.js}"></script>
+
+            <!-- <![endif]-->
+
+            <!--[if IE]>
+            <script src="/js/jquery.1.11.1.min.js"
+                    data-th-src="@{/js/jquery.1.11.1.min.js}"></script>
+            <![endif]-->
+
+            <!--[if !IE]> -->
+            <script type="text/javascript">
+                window.jQuery || document.write("<script src='/js/jquery.min.js'>" + "<" + "/script>");
+            </script>
+
+            <!-- <![endif]-->
+
+            <!--[if IE]>
+            <script type="text/javascript">
+                window.jQuery || document.write("<script src='/js/jquery1x.min.js'>" + "<" + "/script>");
+            </script>
+            <![endif]-->
+            <script type="text/javascript">
+                if ('ontouchstart' in document.documentElement) document.write("<script src='/js/jquery.mobile.custom.min.js'>" + "<" + "/script>");
+            </script>
+            <script src="/js/bootstrap.min.js" data-th-src="@{/js/bootstrap.min.js}"></script>
+
+            <!-- ace scripts -->
+            <script src="/js/ace-elements.min.js"
+                    data-th-src="@{/js/ace-elements.min.js}"></script>
+            <script src="/js/ace.min.js" data-th-src="@{/js/ace.min.js}"></script>
+
+            <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-xs btn-inverse">
+                <i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
+            </a>
+
+        </div>
+
+    </div><!-- /.main-container -->
+
+    <script type="text/javascript">
+        try {
+            ace.settings.check('navbar', 'fixed')
+        } catch (e) {
+        }
+        try {
+            ace.settings.check('main-container', 'fixed')
+        } catch (e) {
+        }
+        try {
+            ace.settings.check('sidebar', 'fixed')
+        } catch (e) {
+        }
+        try {
+            ace.settings.check('sidebar', 'collapsed')
+        } catch (e) {
+        }
+        try {
+            ace.settings.check('breadcrumbs', 'fixed')
+        } catch (e) {
+        }
+    </script>
+</div>
+</body>
+</html>

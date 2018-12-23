@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+</head>
+
+<body>
+<div th:fragment="categoryLookupList">
+    <option th:value="0"></option>
+    <div th:each="category : ${categories}" th:remove="tag">
+        <option th:value="${category.id}"
+                data-th-icon="'ace-icon fa ' + ${category.icon}"
+                th:text="${category.name}">
+        </option>
+        <option th:each="childCategory : ${category.childs}"
+                th:value="${childCategory.id}"
+                child="true"
+                data-th-icon="'ace-icon fa ' + ${childCategory.icon}"
+                th:text="${childCategory.name}">
+        </option>
+    </div>
+</div>
+</body>
+</html>
+
+

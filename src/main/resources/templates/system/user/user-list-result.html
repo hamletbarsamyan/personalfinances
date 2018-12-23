@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+</head>
+
+<body>
+<div th:fragment="userResultsList" th:unless="${#lists.isEmpty(page.content)}" class="table responsive">
+    <table class="table table-striped table-bordered table-hover">
+        <thead>
+            <tr>
+                <th class="col-xs-2" data-th-text="#{user.login}"></th>
+                <th class="col-xs-2" data-th-text="#{user.first_name}"></th>
+                <th class="col-xs-2" data-th-text="#{user.last_name}"></th>
+                <th class="col-xs-2" data-th-text="#{user.email}"></th>
+                <th class="col-xs-2" data-th-text="#{user.phone}"></th>
+                <th class="col-xs-1" data-th-text="#{user.status}"></th>
+                <th class="col-xs-2"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr data-th-each="user : ${page.content}">
+                <td data-th-text="${user.login}">login</td>
+                <td data-th-text="${user.firstName}">firstName</td>
+                <td data-th-text="${user.lastName}">lastName</td>
+                <td data-th-text="${user.email}">email</td>
+                <td data-th-text="${user.phone}">phone</td>
+                <td>
+                    <span th:if="${user.enabled}" class="label label-sm label-success arrowed" data-th-text="#{user.enabled}"></span>
+                    <span th:unless="${user.enabled}" class="label label-sm label-danger arrowed" data-th-text="#{user.disabled}"></span>
+                </td>
+                <td>
+                    <div class="hidden-sm hidden-xs action-buttons center">
+                        <a href="#" class="blue" data-th-href="@{/user/view(id=${user.id})}">
+                            <i class="ace-icon fa fa-search-plus bigger-130" th:title="#{button.view}"></i>
+                        </a>
+                        &#160;
+                        <a href="#" class="green" data-th-href="@{/user/edit(id=${user.id})}">
+                            <i class="ace-icon fa fa-pencil bigger-130" th:title="#{button.edit}"></i>
+                        </a>
+                        &#160;
+                        <a href="#" class="red" th:data-id="${user.id}"
+                           data-toggle="modal" data-target="#confirmDelete">
+                            <i class="ace-icon fa fa-trash-o bigger-130" th:title="#{user.delete}"></i>
+                        </a>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="row">
+        <div class="col-xs-6">
+            <span th:text="#{table.total.records(${page.dataCount})}"></span>
+        </div>
+        <div class="col-xs-6">
+            <div class="dataTables_paginate paging_simple_numbers" id="dynamic-table_paginate">
+                <ul class="pagination">
+                    <li th:class="${page.firstPageEnabled} ? '' : 'disabled'">
+                        <span th:if="${not page.firstPageEnabled}">&laquo;</span>
+                        <a th:if="${page.firstPageEnabled}" title="First page"
+                           href="javascript:void(0);" th:onclick="'javascript:loadUsers(1)'">&laquo;</a>
+                    </li>
+                    <li th:class="${page.previousPageEnabled} ? '' : 'disabled'">
+                        <span th:if="${not page.previousPageEnabled}">&lsaquo;</span>
+                        <a th:if="${page.previousPageEnabled}" title="Previous Page" href="javascript:void(0);"
+                           th:onclick="'javascript:loadUsers(' + ${page.currentPage - 1} + ')'">&lsaquo;</a>
+                    </li>
+                    <li th:each="item : ${page.items}" th:class="${item.current}? 'active' : ''">
+                        <span th:if="${item.current}" th:text="${item.number}">1</span>
+                        <a th:if="${not item.current}" href="javascript:void(0);" th:onclick="'javascript:loadUsers('+ ${item.number} + ')'">
+                            <span th:text="${item.number}">1</span>
+                        </a>
+                    </li>
+                    <li th:class="${page.nextPageEnabled}? '' : 'disabled'">
+                        <span th:if="${not page.nextPageEnabled}">&rsaquo;</span>
+                        <a th:if="${page.nextPageEnabled}" title="Go to next page"
+                           href="javascript:void(0);" th:onclick="'javascript:loadUsers('+ ${page.currentPage + 1} + ')'">&rsaquo;</a>
+                    </li>
+                    <li th:class="${page.lastPageEnabled} ? '' : 'disabled'">
+                        <span th:if="${not page.lastPageEnabled}">&raquo;</span>
+                        <a th:if="${page.lastPageEnabled}" title="Last Page"
+                           href="javascript:void(0);" th:onclick="'javascript:loadUsers(' + ${page.totalPages} + ')'">&raquo;</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        function loadUsers(page) {
+            var url = 'loadUsers?page=' + page;
+            $("#resultsBlock").html('<i class="ace-icon fa fa-spinner fa-spin orange bigger-125"></i>').load(url);
+        }
+    </script>
+</div>
+</body>
+</html>
+
+

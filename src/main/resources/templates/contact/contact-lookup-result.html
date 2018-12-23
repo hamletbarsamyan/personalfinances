@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+</head>
+
+<body>
+<div th:fragment="contactLookupList">
+    <option th:value="0"></option>
+    <option th:each="contact : ${contacts}"
+            th:value="${contact.id}"
+            th:text="${contact.name}">
+    </option>
+</div>
+</body>
+</html>
+
+

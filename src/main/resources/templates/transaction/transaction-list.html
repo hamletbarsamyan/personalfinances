@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:th="http://www.thymeleaf.org">
+
+<head data-th-replace="fragments/template :: head">
+
+</head>
+
+<body class="no-skin">
+	<div data-th-replace="fragments/template :: navbar"></div>
+
+	<div class="main-container" id="main-container">
+		<div data-th-replace="fragments/template :: sidebar"></div>
+
+		<div class="main-content">
+			<div class="main-content-inner">
+				<div class="breadcrumbs" id="breadcrumbs">
+					<ul class="breadcrumb">
+						<li>
+							<i class="ace-icon fa fa-home home-icon"></i>
+							<a href="#" data-th-href="@{/home}" th:text="#{menu.home}">Home</a>
+						</li>
+						<li class="active" th:text="#{menu.transactions}">transactions</li>
+					</ul><!-- /.breadcrumb -->
+				</div>
+
+				<div class="page-content">
+					<div class="page-header">
+						<h1 class="lighter blue">
+							<small>
+								<span data-th-text="#{transaction.transactions}"></span>
+							</small>
+
+							<div class="row pull-right">
+								<div class="col-xs-12 hidden-xs">
+									<button type="button" class="btn btn-xs btn-primary"
+											data-toggle="modal" data-target="#trDialog"
+											onclick="addTransaction();" th:title="#{transaction.add}">
+										<span class="ui-icon ace-icon fa fa-plus"></span>
+										<span th:text="#{common.add}"></span>
+									</button>
+
+									<button type="button" class="btn btn-xs btn-primary"
+											data-toggle="modal" data-target="#trDialog"
+											onclick="addTransactionBatch();" th:title="#{transaction.add.multiple}">
+										<span class="ui-icon ace-icon fa fa-plus"></span>
+										<span class="ui-icon ace-icon fa fa-plus"></span>
+										<span th:text="#{common.add.multiple}"></span>
+									</button>
+
+									<button id="filterButton" type="button" class="btn btn-xs btn-info"
+											data-toggle="collapse" data-target="#filterRow" th:title="#{common.filter}">
+										<span id="filterIcon" class="ace-icon fa fa-chevron-down"></span>
+										<span th:text="#{common.filter}"></span>
+									</button>
+								</div>
+
+								<div class="hidden-sm hidden-md hidden-lg">
+									<button type="button" class="btn btn-xs btn-primary"
+											data-toggle="modal" data-target="#trDialog"
+											onclick="addTransaction();" th:title="#{transaction.add}">
+										<span class="ui-icon ace-icon fa fa-plus"></span>
+									</button>
+
+									<button type="button" class="btn btn-xs btn-primary"
+											data-toggle="modal" data-target="#trDialog"
+											onclick="addTransactionBatch();" th:title="#{transaction.add.multiple}">
+										<span class="ui-icon ace-icon fa fa-plus"></span>
+										<span class="ui-icon ace-icon fa fa-plus"></span>
+									</button>
+
+									<button id="filterButton" type="button" class="btn btn-xs btn-info"
+											data-toggle="collapse" data-target="#filterRow" th:title="#{common.filter}">
+										<span id="filterIcon" class="ace-icon fa fa-chevron-down"></span>
+									</button>
+								</div>
+							</div>
+						</h1>
+					</div><!-- /.page-header -->
+
+					<div class="row">
+						<div class="col-xs-12">
+							<!-- PAGE CONTENT BEGINS -->
+							<div class="row">
+								<div class="col-xs-12">
+									<div id="filterRow" class="collapse row">
+										<form id="searchForm" class="form-compact" role="form">
+											<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+											<input id="sortBy" name="sortBy" type="hidden" value="date"/>
+											<input id="asc" name="asc" type="hidden" value="false"/>
+											<div class="col-xs-12">
+												<div class="row">
+													<div class="form-group col-md-1 col-sm-4 col-xs-6">
+														<label for="type" th:text="#{transaction.type}"></label>
+														<select id="type" name="type" class="form-control">
+															<option th:value="0"></option>
+															<option th:value="${T(am.jsl.personalfinances.domain.transaction.TransactionType).EXPENSE.value}"
+																	th:text="#{transaction.type.expense}"></option>
+															<option th:value="${T(am.jsl.personalfinances.domain.transaction.TransactionType).INCOME.value}"
+																	th:text="#{transaction.type.income}"></option>
+															<option th:value="${T(am.jsl.personalfinances.domain.transaction.TransactionType).TRANSFER.value}"
+																	th:text="#{transaction.type.transfer}"></option>
+														</select>
+													</div>
+													<div class="form-group col-md-2 col-sm-4 col-xs-6">
+														<label for="category" th:text="#{transaction.category}"></label>
+														<select id="category" name="category" class="form-control"
+																style="font-family: 'FontAwesome';">
+														</select>
+													</div>
+													<div class="form-group col-md-3 col-sm-4 col-xs-6">
+														<label for="daterange" th:text="#{common.date}"></label>
+														<div class="input-group">
+															<span class="input-group-addon">
+																<i class="ace-icon fa fa-calendar"></i>
+															</span>
+															<input id="daterange" name="daterange" type="text" class="form-control"/>
+														</div>
+													</div>
+													<div class="form-group col-md-2 col-sm-4 col-xs-6">
+														<label for="account" th:text="#{transaction.account}"></label>
+														<select id="account" name="account" class="form-control"
+																style="font-family: 'FontAwesome';">
+														</select>
+													</div>
+													<div class="form-group col-md-2 col-sm-3 col-xs-6">
+														<label for="contact" th:text="#{transaction.contact}"></label>
+														<select id="contact" name="contact" class="form-control"></select>
+													</div>
+													<div class="form-group col-md-2 col-sm-3 col-xs-6">
+														<label for="description" th:text="#{transaction.description}"></label>
+														<input id="description" name="description" type="text" class="form-control"/>
+													</div>
+												</div>
+												<div class="row">
+													<div class="form-group col-md-6 col-sm-8 col-xs-12 pull-right">
+														<label for="buttons">&#160;&#160;</label>
+														<div id="buttons">
+															<button id="searchButton" class="btn btn-purple btn-xs" type="button" onclick="javascript:search()">
+																<span class="ace-icon fa fa-search"></span>
+																<span th:text="#{button.search}"></span>
+															</button>
+															&#160;&#160;
+															<label for="resetButton">&#160;&#160;</label>
+															<button id="resetButton" type="button" class="btn btn-xs" onclick="javascript:resetSearch()">
+																<span class="ace-icon fa fa-undo"></span>
+																<span th:text="#{button.reset}"></span>
+															</button>
+														</div>
+													</div>
+												</div>
+											</div>
+										</form>
+									</div>
+
+									<br />
+									<!-- Results block -->
+									<div class="table responsive">
+										<table class="dataTable table table-sm table-striped table-hover table-bordered">
+											<thead class="thin-border-bottom">
+											<tr>
+												<th class="col-xs-5 sorting" data-th-text="#{transaction.category}" sort="cat" onclick="sortBy(this);"></th>
+												<th class="col-xs-3 sorting" data-th-text="#{common.amount}" sort="amount" onclick="sortBy(this);"></th>
+												<th class="col-xs-3 sorting" data-th-text="#{common.date}" sort="date" onclick="sortBy(this);"></th>
+												<th class="col-xs-1" align="right">
+													<select id="pageSize" onchange="loadTransactions(1);">
+														<option value="10">10</option>
+														<option value="25">25</option>
+														<option value="50">50</option>
+														<option value="100">100</option>
+													</select>
+												</th>
+											</tr>
+											</thead>
+											<tbody id="resultsBlock">
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div><!-- /.row -->
+
+						</div>
+
+					</div><!-- /.page-content -->
+				</div>
+			</div><!-- /.main-content -->
+		</div>
+
+		<!-- Transaction Dialog -->
+		<div id="trDialog" class="modal" role="dialog" aria-labelledby="trDialog" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div id="trDialogContentDiv">
+				</div>
+			</div>
+		</div>
+
+		<!-- Delete Dialog -->
+		<div class="modal" id="confirmDelete" role="dialog" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<form id="deleteForm" class="form-horizontal" action="#" data-th-action="@{/transaction/delete}" method="post">
+						<input type="hidden" id="deleteId" name="id" />
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+							<h4 class="modal-title" th:text="#{transaction.delete}"></h4>
+						</div>
+						<div class="modal-body">
+							<p th:text="#{transaction.delete.confirm}"></p>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-xs btn-default" data-dismiss="modal" th:text="#{button.cancel}"></button>
+							<button type="button" class="btn btn-xs btn-danger" id="confirm" th:text="#{button.delete}" onclick="deleteTransaction();"></button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+
+		<div data-th-replace="fragments/template :: footer"></div>
+
+		<link type="text/css" rel="stylesheet" href="/css/daterangepicker.css"
+			  data-th-href="@{/css/daterangepicker.css}"/>
+
+		<script src="/js/moment.min.js" data-th-src="@{/js/moment.min.js}"></script>
+		<script src="/js/daterangepicker.js" data-th-src="@{/js/daterangepicker.js}"></script>
+		<script src="/js/transaction-list.js" data-th-src="@{/js/transaction-list.js}"></script>
+
+		<script type="text/javascript">
+			$(document).ready(function() {
+				$('#confirmDelete').on('show.bs.modal', function (e) {
+					$id = $(e.relatedTarget).attr('data-id');
+					$('#deleteId').val($id);
+				});
+
+                $filterRow = $('#filterRow');
+                $filterRow.on('hidden.bs.collapse', toggleSearch);
+                $filterRow.on('shown.bs.collapse', toggleSearch);
+
+                initDaterangepicker();
+
+				// transactions
+				loadTransactions(1);
+			});
+
+            function deleteTransaction() {
+                $.ajax({
+                    type: "POST",
+                    url: "delete",
+                    data: $('#deleteForm').serialize(),
+                    success: function(data) {
+                        $('#confirmDelete').modal('hide');
+                        loadTransactions(1);
+                    }
+                });
+            }
+		</script>
+
+	</div><!-- /.main-container -->
+</body>
+
+
+</html>
+

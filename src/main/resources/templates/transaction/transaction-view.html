@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+</head>
+
+<body>
+<div th:fragment="transactionFormDiv">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h5 class="modal-title" th:text="#{transaction.details}">
+            </h5>
+        </div>
+        <div class="modal-body">
+            <div class="profile-user-info profile-user-info-striped">
+                <div class="profile-info-row">
+                    <div class="profile-info-name">
+                        <span th:text="#{transaction.type}"></span>
+                    </div>
+                    <div class="profile-info-value">
+                        <span th:class="${'badge ' + (transaction.expense ? 'badge-pink' : (transaction.income ? 'badge-success' : ''))}"
+                              th:text="#{'transaction.type.' + ${transaction.transactionType}}">
+                        </span>
+                    </div>
+                </div>
+
+                <div class="profile-info-row">
+                    <div class="profile-info-name">
+                        <span th:text="#{transaction.account}"></span>
+                    </div>
+                    <div class="profile-info-value">
+                        <span th:style="'background-color:' + ${transaction.accountColor}" class="label">
+                            <span th:utext="${transaction.accountIcon}" style="font-family: 'FontAwesome';"></span>
+                            <span th:text="' ' + ${transaction.account} + ' ' + ${transaction.symbol}"></span>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="profile-info-row">
+                    <div class="profile-info-name">
+                        <span th:text="#{transaction.category}"></span>
+                    </div>
+                    <div style="padding-left:10px; padding-top:3px; padding-bottom: 3px; border-top:1px dotted #DCEBF7;">
+                        <div th:if="${transaction.parentCategory != null}" th:remove="tag">
+                            <span class="categoryCircle" th:style="'background-color:' + ${transaction.parentCategoryColor}"
+                                  th:if="${!#strings.isEmpty(transaction.parentCategoryIcon)}">
+                                <span th:utext="${transaction.parentCategoryIcon}"></span>
+                            </span>
+                            <span class="categoryLabel" th:text="${transaction.parentCategory}"></span>
+                            <span class="categoryLabel">  >  </span>
+                        </div>
+                        <span class="categoryCircle" th:style="'background-color:' + ${transaction.categoryColor}"
+                              th:if="${!#strings.isEmpty(transaction.categoryIcon)}">
+                             <span th:utext="${transaction.categoryIcon}"></span>
+                        </span>
+                        <span class="categoryLabel" th:text="${transaction.category}"></span>
+                    </div>
+                </div>
+
+                <div class="profile-info-row">
+                    <div class="profile-info-name">
+                        <span th:text="#{common.amount}"></span>
+                    </div>
+                    <div class="profile-info-value">
+                        <b th:class="${!transaction.transfer ? transaction.transactionTypeClass : 'trType1'}"
+                           th:title="#{'transaction.type.' + ${transaction.transactionType}}">
+                            <span th:inline="text">[[${#numbers.formatDecimal(transaction.amount, 0, 'DEFAULT', 2, 'DEFAULT')}]]</span>
+                            <span th:text="${transaction.symbol}"></span>
+                        </b>
+                    </div>
+                </div>
+
+                <div id="transferDiv" th:if="${transaction.transfer}" th:remove="tag">
+                    <div class="profile-info-row">
+                        <div class="profile-info-name">
+                            <span th:text="#{transaction.target_account}"></span>
+                        </div>
+                        <div class="profile-info-value">
+                        <span th:style="'background-color:' + ${transaction.targetAccountColor}" class="label">
+                            <span th:utext="${transaction.targetAccountIcon}" style="font-family: 'FontAwesome';"></span>
+                            <span th:text="' ' + ${transaction.targetAccount} + ' ' + ${transaction.targetAccountSymbol}"></span>
+                        </span>
+                        </div>
+                    </div>
+                    <div class="profile-info-row">
+                        <div class="profile-info-name">
+                            <span th:text="#{common.currency.rate}"></span>
+                        </div>
+                        <div class="profile-info-value">
+                            <b class="trType2">
+                                <span th:inline="text">[[${#numbers.formatDecimal(transaction.exchangeRate, 0, 'DEFAULT', 2, 'DEFAULT')}]]</span>
+                            </b>
+                        </div>
+                    </div>
+
+                    <div class="profile-info-row">
+                        <div class="profile-info-name">
+                            <span th:text="#{transaction.converted_amount}"></span>
+                        </div>
+                        <div class="profile-info-value">
+                            <b class="trType2">
+                                <span th:inline="text">[[${#numbers.formatDecimal(transaction.convertedAmount, 0, 'DEFAULT', 2, 'DEFAULT')}]]</span>
+                                <span th:text="${transaction.targetAccountSymbol}"></span>
+                            </b>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-info-row">
+                    <div class="profile-info-name">
+                        <span th:text="#{common.date}"></span>
+                    </div>
+                    <div class="profile-info-value">
+                        <div th:title="${#personalfinances.prettyTime(transaction.transactionDate)}">
+                            <span>
+                                <i class="ace-icon fa fa-calendar bigger-110"></i>
+                                <span th:text="${#dates.format(transaction.transactionDate, 'MMM dd, yyyy')}"></span>
+                            </span>&#160;&#160;
+                            <span>
+                                <i class="ace-icon fa fa-clock-o bigger-110"></i>
+                                <span th:text="${#dates.format(transaction.transactionDate, 'HH:mm')}"></span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-info-row" th:if="${transaction.contact != null}">
+                    <div class="profile-info-name">
+                        <span th:text="#{transaction.contact}"></span>
+                    </div>
+                    <div class="profile-info-value">
+                        <span id="contactName" th:text="${transaction.contact}"></span>
+                    </div>
+                </div>
+
+                <div class="profile-info-row" th:if="${!#strings.isEmpty(transaction.description)}">
+                    <div class="profile-info-name">
+                        <span th:text="#{transaction.description}"></span>
+                    </div>
+                    <div class="profile-info-value">
+                        <span th:text="${transaction.description}"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-xs btn-default" data-dismiss="modal" th:text="#{button.cancel}"></button>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+
+

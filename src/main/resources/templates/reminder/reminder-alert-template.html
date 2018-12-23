@@ -1,0 +1,48 @@
+<div xmlns:th="http://www.thymeleaf.org" th:remove="tag">
+<a href="#" class="dropdown-toggle" data-toggle="dropdown" th:title="#{reminder.reminders}">
+    <i class="ace-icon fa fa-bell"></i>
+    <span class="badge badge-important" th:unless="${#lists.isEmpty(reminders)}" th:text="${#lists.size(reminders)}"></span>
+</a>
+<ul class="dropdown-menu-right dropdown-navbar navbar-blue dropdown-menu dropdown-caret dropdown-close">
+    <li class="dropdown-content ace-scroll" style="position: relative;">
+        <div class="scroll-track" style="display: none;">
+            <div class="scroll-bar"></div>
+        </div>
+        <div class="scroll-content" style="max-height: 200px;">
+            <ul class="dropdown-menu dropdown-navbar navbar-blue">
+                <li data-th-each="reminder : ${reminders}">
+                    <a href="javascript:void(0);" th:onclick="'javascript:loadReminder('+ ${reminder.id} + ')'">
+                        <div class="clearfix">
+                            <span class="pull-left">
+                                <div th:if="${reminder.parentCategory != null}" th:remove="tag">
+                                    <span class="categoryCircle" th:style="'background-color:' + ${reminder.parentCategoryColor}"
+                                          th:if="${!#strings.isEmpty(reminder.parentCategoryIcon)}">
+                                        <span th:utext="${reminder.parentCategoryIcon}"></span>
+                                    </span>
+                                    <span class="categoryLabel" th:text="${reminder.parentCategory}"></span>
+                                    <span class="categoryLabel">  >  </span>
+                                </div>
+                                <span class="categoryCircle" th:style="'background-color:' + ${reminder.categoryColor}"
+                                      th:if="${!#strings.isEmpty(reminder.categoryIcon)}">
+                                     <span th:utext="${reminder.categoryIcon}"></span>
+                                </span>
+                                <span class="categoryLabel" th:text="${reminder.category}"></span>
+                                <span style="font-size: 10px;" th:title="${#personalfinances.prettyTime(reminder.dueDate)}"
+                                      th:text="${#dates.format(reminder.dueDate, 'MMM dd, yyyy')}">
+                                </span>
+                            </span>
+                            <span class="pull-right">
+                                <b th:class="${reminder.transactionTypeClass}" style="font-size: 11px;"
+                                   th:title="#{'transaction.type.' + ${reminder.transactionType}}">
+                                    <span th:inline="text">[[${#numbers.formatDecimal(reminder.amount, 0, 'DEFAULT', 2, 'DEFAULT')}]]</span>
+                                    <span th:text="${reminder.symbol}"></span>
+                                </b>
+                            </span>
+                        </div>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </li>
+</ul>
+</div>

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+</head>
+
+<body>
+<div th:fragment="transactionResultsList" th:remove="tag">
+    <tr data-th-each="transaction : ${page.content}">
+        <td>
+            <div th:if="${transaction.parentCategory != null}" th:remove="tag">
+                <span class="categoryCircle" th:style="'background-color:' + ${transaction.parentCategoryColor}"
+                      th:if="${!#strings.isEmpty(transaction.parentCategoryIcon)}">
+                    <span th:utext="${transaction.parentCategoryIcon}"></span>
+                </span>
+                <span class="categoryLabel" th:text="${transaction.parentCategory}"></span>
+                <span class="categoryLabel">  >  </span>
+            </div>
+            <span class="categoryCircle" th:style="'background-color:' + ${transaction.categoryColor}"
+                  th:if="${!#strings.isEmpty(transaction.categoryIcon)}">
+                 <span th:utext="${transaction.categoryIcon}"></span>
+            </span>
+            <span class="categoryLabel" th:text="${transaction.category}"></span>
+        </td>
+        <td align="right">
+            <b th:class="${transaction.transactionTypeClass}"
+               th:title="#{'transaction.type.' + ${transaction.transactionType}}">
+                <span th:inline="text">[[${#numbers.formatDecimal(transaction.amount, 0, 'DEFAULT', 2, 'DEFAULT')}]]</span>
+                <span th:text="${transaction.symbol}"></span>
+            </b>
+        </td>
+        <td th:title="${#personalfinances.prettyTime(transaction.transactionDate)}" th:unless="${#lists.isEmpty(page.content)}">
+            <span>
+                <i class="ace-icon fa fa-calendar bigger-110"></i>
+                <span th:text="${#dates.format(transaction.transactionDate, 'MMM dd, yyyy')}"></span>
+            </span>&#160;&#160;
+            <span>
+                <i class="ace-icon fa fa-clock-o bigger-110"></i>
+                <span th:text="${#dates.format(transaction.transactionDate, 'HH:mm')}"></span>
+            </span>
+        </td>
+        <td>
+            <div class="hidden-sm hidden-xs action-buttons btn-group center">
+                <a href="#trDialog" class="blue" data-toggle="modal"
+                   th:onclick="'javascript:viewTransaction('+ ${transaction.id} + ')'">
+                    <i class="ace-icon fa fa-search bigger-130" th:title="#{common.details}"></i>
+                </a>
+                &#160;
+                <a href="#trDialog" class="green" data-toggle="modal"
+                   th:onclick="'javascript:editTransaction('+ ${transaction.id} + ')'">
+                    <i class="ace-icon fa fa-pencil bigger-130" th:title="#{button.edit}"></i>
+                </a>
+                &#160;
+                <a href="#" class="red" th:data-id="${transaction.id}"
+                   data-toggle="modal" data-target="#confirmDelete">
+                    <i class="ace-icon fa fa-trash-o bigger-130" th:title="#{transaction.delete}"></i>
+                </a>
+            </div>
+
+            <div class="hidden-md hidden-lg">
+                <div class="inline pos-rel">
+                    <button class="btn btn-minier btn-primary dropdown-toggle" data-toggle="dropdown" data-position="auto">
+                        <i class="ace-icon fa fa-cog icon-only bigger-110"></i>
+                    </button>
+
+                    <ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
+                        <li>
+                            <a href="#trDialog" class="blue" data-toggle="modal"
+                               th:onclick="'javascript:viewTransaction('+ ${transaction.id} + ')'">
+                                <i class="ace-icon fa fa-search bigger-130" th:title="#{common.details}"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#trDialog" class="green" data-toggle="modal"
+                               th:onclick="'javascript:editTransaction('+ ${transaction.id} + ')'">
+                                <i class="ace-icon fa fa-pencil bigger-130" th:title="#{button.edit}"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="red" th:data-id="${transaction.id}"
+                               data-toggle="modal" data-target="#confirmDelete">
+                                <i class="ace-icon fa fa-trash-o bigger-130" th:title="#{transaction.delete}"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </td>
+    </tr>
+    <tr th:unless="${#lists.isEmpty(page.content)}" style="background-color: #f4f9fc;">
+        <td colspan="4">
+            <div class="row">
+                <div class="col-xs-6">
+                    <span th:text="#{table.total.records(${page.dataCount})}" style="white-space: nowrap;"></span>&#160;&#160;
+                    <span th:text="#{table.total.amounts}" style="white-space: nowrap;" th:unless="${#lists.isEmpty(totals)}"></span>&#160;
+                    <span data-th-each="totalObj : ${totals}" th:remove="tag">
+                         <b th:class="${totalObj.transactionTypeClass}" style="white-space: nowrap;"
+                            th:title="#{'transaction.type.' + ${totalObj.transactionType}}">
+                            <span th:inline="text">[[${#numbers.formatDecimal(totalObj.total, 0, 'DEFAULT', 2, 'DEFAULT')}]]</span>
+                             <span th:text="${totalObj.symbol}"></span>
+                         </b>&#160;&#160;
+                    </span>
+                </div>
+                <div class="col-xs-6">
+                    <div class="dataTables_paginate paging_simple_numbers" id="dynamic-table_paginate">
+                        <ul class="pagination">
+                            <li th:class="${page.firstPageEnabled} ? '' : 'disabled'">
+                                <span th:if="${not page.firstPageEnabled}">&laquo;</span>
+                                <a th:if="${page.firstPageEnabled}" title="First page"
+                                   href="javascript:void(0);" th:onclick="'javascript:loadTransactions(1)'">&laquo;</a>
+                            </li>
+                            <li th:class="${page.previousPageEnabled} ? '' : 'disabled'">
+                                <span th:if="${not page.previousPageEnabled}">&lsaquo;</span>
+                                <a th:if="${page.previousPageEnabled}" title="Previous Page" href="javascript:void(0);"
+                                   th:onclick="'javascript:loadTransactions(' + ${page.currentPage - 1} + ')'">&lsaquo;</a>
+                            </li>
+                            <li th:each="item : ${page.items}" th:class="${item.current}? 'active' : ''">
+                                <span th:if="${item.current}" th:text="${item.number}">1</span>
+                                <a th:if="${not item.current}" href="javascript:void(0);" th:onclick="'javascript:loadTransactions('+ ${item.number} + ')'">
+                                    <span th:text="${item.number}">1</span>
+                                </a>
+                            </li>
+                            <li th:class="${page.nextPageEnabled}? '' : 'disabled'">
+                                <span th:if="${not page.nextPageEnabled}">&rsaquo;</span>
+                                <a th:if="${page.nextPageEnabled}" title="Go to next page"
+                                   href="javascript:void(0);" th:onclick="'javascript:loadTransactions('+ ${page.currentPage + 1} + ')'">&rsaquo;</a>
+                            </li>
+                            <li th:class="${page.lastPageEnabled} ? '' : 'disabled'">
+                                <span th:if="${not page.lastPageEnabled}">&raquo;</span>
+                                <a th:if="${page.lastPageEnabled}" title="Last Page"
+                                   href="javascript:void(0);" th:onclick="'javascript:loadTransactions(' + ${page.totalPages} + ')'">&raquo;</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </td>
+    </tr>
+    <tr th:if="${#lists.isEmpty(page.content)}">
+        <td colspan="4">
+            <span th:text="#{table.no.items.found}"></span>
+        </td>
+    </tr>
+</div>
+</body>
+</html>
+
+

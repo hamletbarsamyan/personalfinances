@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:th="http://www.thymeleaf.org">
+
+<head data-th-replace="fragments/template :: head">
+
+</head>
+
+<body class="no-skin">
+	<div data-th-replace="fragments/template :: navbar"></div>
+
+	<div class="main-container" id="main-container">
+		<div data-th-replace="fragments/template :: sidebar"></div>
+
+		<div class="main-content">
+			<div class="main-content-inner">
+				<div class="breadcrumbs" id="breadcrumbs">
+					<ul class="breadcrumb">
+						<li>
+							<i class="ace-icon fa fa-home home-icon"></i>
+							<a href="#" data-th-href="@{/home}" th:text="#{menu.home}">Home</a>
+						</li>
+
+						<li>
+							<a href="#" th:text="#{menu.settings}">settings</a>
+						</li>
+						<li class="active" th:text="#{menu.contacts}">contacts</li>
+					</ul><!-- /.breadcrumb -->
+				</div>
+
+				<div class="page-content">
+					<div class="page-header">
+						<h1 class="lighter blue">
+							<small>
+								<span data-th-text="#{contact.contacts}"></span>
+							</small>
+
+							<div class="row pull-right">
+								<div class="col-xs-12">
+									<a href="#contactDialog" data-toggle="modal" class="btn btn-xs btn-primary"
+									   onclick="addContact();" th:text="#{contact.add}">
+									</a>
+								</div>
+							</div>
+						</h1>
+					</div><!-- /.page-header -->
+
+					<div class="row">
+						<div class="col-xs-12">
+							<!-- PAGE CONTENT BEGINS -->
+							<div class="row">
+								<div class="col-xs-10">
+									<div class="alert alert-danger alert-dismissable" th:if="${error != null}">
+										<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+										<h4 data-th-text="${error}">Error!</h4>
+									</div>
+									<div class="alert alert-success alert-dismissable" th:if="${message != null}">
+										<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+										<h4 data-th-text="${message}">Success!</h4>
+									</div>
+									<br />
+									<!-- Results block -->
+									<div id="resultsBlock" data-loading-text="<i class='fa fa-spinner fa-spin></i>'">
+										<table class="table table-striped table-bordered table-hover">
+											<thead>
+											<tr>
+												<th class="col-xs-3" data-th-text="#{contact.name}"></th>
+												<th class="col-xs-3" data-th-text="#{common.email}"></th>
+												<th class="col-xs-2" data-th-text="#{common.phone}"></th>
+												<th class="col-xs-3" data-th-text="#{contact.description}"></th>
+												<th class="col-xs-1"></th>
+											</tr>
+											</thead>
+											<tbody>
+											<tr data-th-each="contact : ${contacts}">
+												<td th:text="${contact.name}"></td>
+												<td th:text="${contact.email}"></td>
+												<td th:text="${contact.phone}"></td>
+												<td th:text="${contact.description}"></td>
+												<td>
+													<div class="hidden-sm hidden-xs action-buttons btn-group center">
+														<a href="#contactDialog" class="green" data-toggle="modal"
+														   th:onclick="'javascript:editContact('+ ${contact.id} + ')'">
+															<i class="ace-icon fa fa-pencil bigger-130" th:title="#{button.edit}"></i>
+														</a>
+														&#160;
+														<a href="#" class="red" th:data-id="${contact.id}"
+														   data-toggle="modal" data-target="#confirmDelete">
+															<i class="ace-icon fa fa-trash-o bigger-130" th:title="#{contact.delete}"></i>
+														</a>
+													</div>
+
+													<div class="hidden-md hidden-lg">
+														<div class="inline pos-rel">
+															<button class="btn btn-minier btn-primary dropdown-toggle" data-toggle="dropdown" data-position="auto">
+																<i class="ace-icon fa fa-cog icon-only bigger-110"></i>
+															</button>
+
+															<ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
+																<li>
+																	<a href="#contactDialog" class="green" data-toggle="modal"
+																	   th:onclick="'javascript:editContact('+ ${contact.id} + ')'">
+																		<i class="ace-icon fa fa-pencil bigger-130" th:title="#{button.edit}"></i>
+																	</a>
+																</li>
+																<li>
+																	<a href="#" class="red" th:data-id="${contact.id}"
+																	   data-toggle="modal" data-target="#confirmDelete">
+																		<i class="ace-icon fa fa-trash-o bigger-130" th:title="#{contact.delete}"></i>
+																	</a>
+																</li>
+															</ul>
+														</div>
+													</div>
+												</td>
+											</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div><!-- /.row -->
+
+						</div>
+
+					</div><!-- /.page-content -->
+				</div>
+			</div><!-- /.main-content -->
+		</div>
+
+		<!-- Contact Dialog -->
+		<div id="contactDialog" class="modal" role="dialog" aria-labelledby="contactDialog" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div id="contactDialogContentDiv">
+				</div>
+			</div>
+		</div>
+
+		<!-- Delete Dialog -->
+		<div class="modal" id="confirmDelete" role="dialog" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<form id="deleteForm" class="form-horizontal" action="#" data-th-action="@{/contact/delete}" method="post">
+						<input type="hidden" id="deleteId" name="id" />
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+							<h4 class="modal-title" th:text="#{contact.delete}"></h4>
+						</div>
+						<div class="modal-body">
+							<p th:text="#{contact.delete.confirm}"></p>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-xs btn-default" data-dismiss="modal" th:text="#{button.cancel}"></button>
+							<button type="submit" class="btn btn-xs btn-danger" id="confirm" th:text="#{button.delete}"></button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+
+		<div data-th-replace="fragments/template :: footer"></div>
+
+		<script type="text/javascript">
+			$(document).ready(function() {
+				$('#confirmDelete').on('show.bs.modal', function (e) {
+                    $contactId = $(e.relatedTarget).attr('data-id');
+					$('#deleteId').val($contactId);
+				});
+			});
+
+            function addContact() {
+                $('#contactDialogContentDiv').html('<div class="cp-spinner cp-skeleton"></div>').load('add');
+            }
+
+            function editContact(contactId) {
+                $('#contactDialogContentDiv').html('<div class="cp-spinner cp-skeleton"></div>').load('edit?id=' + contactId);
+            }
+		</script>
+
+	</div><!-- /.main-container -->
+</body>
+
+
+</html>
+

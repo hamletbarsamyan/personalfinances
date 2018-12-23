@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:th="http://www.thymeleaf.org">
+
+<head data-th-replace="fragments/admin-template :: head">
+</head>
+
+<body class="no-skin">
+	<div data-th-replace="fragments/admin-template :: navbar"></div>
+
+	<div class="main-container" id="main-container">
+		<div data-th-replace="fragments/admin-template :: sidebar"></div>
+
+		<div class="main-content">
+			<div class="main-content-inner">
+				<div class="breadcrumbs" id="breadcrumbs">
+					<ul class="breadcrumb">
+						<li>
+							<i class="ace-icon fa fa-home home-icon"></i>
+							<a href="#" data-th-href="@{/admin}" th:text="#{menu.home}">Home</a>
+						</li>
+
+						<li>
+							<a href="#" th:text="#{menu.system}">System</a>
+						</li>
+						<li class="active" th:text="#{menu.events}">Events</li>
+					</ul><!-- /.breadcrumb -->
+				</div>
+
+				<div class="page-content">
+					<div class="page-header">
+						<h1 class="lighter blue">
+							<small>
+								<span data-th-text="#{event.events}"></span>
+							</small>
+						</h1>
+
+					</div><!-- /.page-header -->
+
+					<div class="row">
+						<div class="col-xs-12">
+							<!-- PAGE CONTENT BEGINS -->
+							<div class="row">
+								<div class="col-xs-12">
+									<div class="alert alert-danger alert-dismissable" th:if="${error != null}">
+										<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+										<h4 data-th-text="${error}">Error!</h4>
+									</div>
+									<div class="alert alert-success alert-dismissable" th:if="${message != null}">
+										<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+										<h4 data-th-text="${message}">Success!</h4>
+									</div>
+									<div class="widget-box">
+										<div class="widget-header">
+											<h4 class="widget-title" th:text="#{event.search.events}"></h4>
+										</div>
+
+										<div class="widget-body">
+											<div class="widget-main">
+												<form id="eventSearchForm" class="form-inline">
+													<select id="eventType" class="form-control">
+														<option value="0" th:text="#{event.event_type}"></option>
+														<option th:each="eventType : ${T(am.jsl.personalfinances.domain.event.EventType).values()}"
+																th:value="${eventType.value}"
+																th:text="${eventType.operation}"></option>
+													</select>
+													&#160;
+													<select id="performedBy" class="form-control" th:title="#{event.performed_by}">
+														<option value="0" th:text="#{event.performed_by}"></option>
+														<option th:each="user : ${users}"
+																th:value="${user.id}"
+																th:text="${user.login}"></option>
+													</select>
+													&#160;
+													<input id="createdAtStart" type="text" class="form-control date-picker"
+														   data-date-format="dd/mm/yyyy" th:placeholder="#{common.from}"/>
+													<input id="createdAtEnd" type="text" class="form-control date-picker"
+														   data-date-format="dd/mm/yyyy" th:placeholder="#{common.to}"/>
+													&#160;
+													<input id="message" type="text" class="form-control" th:placeholder="#{event.message.hint}">
+													&#160;
+													<button class="btn btn-purple btn-xs" type="button" onclick="javascript:loadEvents(1)">
+														<span class="ace-icon fa fa-search icon-on-right"></span>
+														<span th:text="#{button.search}"></span>
+													</button>
+													&#160;
+													<button type="reset" class="btn btn-xs">
+														<i class="ace-icon fa fa-undo"></i>
+														<span th:text="#{button.reset}"></span>
+													</button>
+												</form>
+											</div>
+										</div>
+									</div>
+									<br />
+									<!-- Results block -->
+									<div id="resultsBlock" data-loading-text="<i class='fa fa-spinner fa-spin></i>'">
+									</div>
+								</div>
+							</div><!-- /.row -->
+
+						</div>
+
+					</div><!-- /.page-content -->
+				</div>
+			</div><!-- /.main-content -->
+		</div>
+
+		<div data-th-replace="fragments/admin-template :: footer"></div>
+
+		<script type="text/javascript">
+			$(document).ready(function() {
+				$('.date-picker').datepicker({
+					autoclose: true,
+					todayHighlight: true
+				});
+
+				loadEvents(1);
+
+				function loadEvents(page) {
+					var url = 'loadEvents?page=' + page
+							+ '&eventType=' + $('#eventType option:selected').val()
+							+ '&performedBy=' + $('#performedBy option:selected').val()
+							+ '&createdAtStart=' + $('#createdAtStart').val()
+							+ '&createdAtEnd=' + $('#createdAtEnd').val()
+							+ '&message=' + $('#message').val();
+					$("#resultsBlock").html('<i class="ace-icon fa fa-spinner fa-spin orange bigger-125"></i>').load(url);
+				}
+			});
+		</script>
+
+	</div><!-- /.main-container -->
+</body>
+
+
+</html>
+

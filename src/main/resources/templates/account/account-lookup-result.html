@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+</head>
+
+<body>
+<div th:fragment="accountLookupList">
+    <option th:value="0"></option>
+    <option th:each="account : ${accounts}"
+            th:value="${account.id}">
+        <span th:utext="${account.icon}"></span>
+        <span th:text="${account.name} + ' (' + ${account.symbol} + ')'"></span>
+    </option>
+</div>
+</body>
+</html>
+
+

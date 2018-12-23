@@ -1,0 +1,218 @@
+.form-group.required .control-label:after {
+    content: " *";
+    color: red;
+}
+
+.btn-file {
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-file input[type=file] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-width: 100%;
+    min-height: 100%;
+    font-size: 100px;
+    text-align: right;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    outline: none;
+    background: white;
+    cursor: inherit;
+    display: block;
+}
+
+.cp-spinner {
+    width: 30px;
+    height: 30px;
+    display: inline-block;
+    box-sizing: border-box;
+    position: relative
+}
+
+.cp-skeleton {
+    border-radius: 50%;
+    border-top: solid 4px #f56151;
+    border-right: solid 4px transparent;
+    border-bottom: solid 4px transparent;
+    border-left: solid 4px transparent;
+    animation: cp-skeleton-animate 1s linear infinite
+}
+
+.cp-skeleton:before {
+    border-radius: 50%;
+    content: " ";
+    width: 30px;
+    height: 30px;
+    display: inline-block;
+    box-sizing: border-box;
+    border-top: solid 4px transparent;
+    border-right: solid 4px transparent;
+    border-bottom: solid 4px transparent;
+    border-left: solid 4px #f56151;
+    position: absolute;
+    top: -4px;
+    left: -4px;
+    transform: rotateZ(-30deg)
+}
+
+.cp-skeleton:after {
+    border-radius: 50%;
+    content: " ";
+    width: 30px;
+    height: 30px;
+    display: inline-block;
+    box-sizing: border-box;
+    border-top: solid 4px transparent;
+    border-right: solid 4px #f56151;
+    border-bottom: solid 4px transparent;
+    border-left: solid 4px transparent;
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    transform: rotateZ(30deg)
+}
+
+@keyframes cp-skeleton-animate {
+    0% {
+        transform: rotate(0);
+        opacity: 1
+    }
+    50% {
+        opacity: .7
+    }
+    100% {
+        transform: rotate(360deg);
+        opacity: 1
+    }
+}
+
+.scrollable tbody {
+    display: block;
+    height: 180px;
+    overflow: auto;
+}
+
+.scrollable thead, .scrollable tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+}
+
+.scrollable thead {
+    width: calc(100% - 1em)
+}
+/* Transaction types */
+.trType1 {
+    color: #DD5A43 !important;
+}
+
+.trType2 {
+    color: #69AA46 !important;
+}
+
+.trType3 {
+    color: #6f92c3 !important;
+}
+
+/* Progress bar */
+
+.progress-bar {
+    color: #555 !important;
+}
+
+.progress-bar-pending {
+    background-color: #2A91D8 !important;
+}
+
+.progress-bar-done {
+    background-color: #69AA46 !important;
+}
+
+/* Modal dialog */
+
+.modal-dialog {
+    border: 1px solid #AAAAAA;
+}
+
+.modal-content {
+    border: 1px solid #AAAAAA;
+    border: none;
+}
+
+.modal-header {
+    padding: 8px;
+    background-color: #EFF3F8;
+}
+
+.modal-footer {
+    padding: 8px;
+}
+
+/* Categories */
+.categoryCircle {
+    text-wrap: none;
+    display: inline-block;
+    line-height: 0px;
+    border-radius: 50%;
+    font-size: 10px !important;
+}
+
+.categoryCircle span {
+    display: inline-block;
+    font-family: 'FontAwesome';
+    padding-top: 50%;
+    padding-bottom: 50%;
+    color: white;
+    margin-left: 7px;
+    margin-right: 7px;
+}
+
+.categoryLabel {
+    color: #555;
+    text-wrap: none;
+}
+
+/* Accounts */
+
+.accountOverviewWidget {
+    margin-top: 5px;
+    margin-right: 10px;
+    float: left;
+}
+
+.accountCircle {
+    text-wrap: none;
+    display: inline-block;
+    line-height: 0px;
+    border-radius: 50%;
+    font-size: 18px !important;
+    font-family: 'FontAwesome';
+    text-align: center;
+}
+
+.accountCircle span {
+    display: inline-block;
+    font-family: 'FontAwesome';
+    padding-top: 50%;
+    padding-bottom: 50%;
+    color: white;
+    margin-left: 7px;
+    margin-right: 7px;
+}
+
+.accountLabel {
+    color: #555;
+    text-wrap: none;
+}
+
+/** Dashboard */
+.infobox > .stat.stat-important {
+    color: #E4564F
+}
+
+.fa-icon {
+    font-family: 'FontAwesome';
+}

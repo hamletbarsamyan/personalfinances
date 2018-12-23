@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head data-th-replace="fragments/admin-template :: head">
+
+</head>
+
+<body class="no-skin">
+<div data-th-replace="fragments/admin-template :: navbar"></div>
+
+<div class="main-container" id="main-container">
+    <div data-th-replace="fragments/admin-template :: sidebar"></div>
+
+    <div class="main-content">
+        <div class="main-content-inner">
+            <div class="breadcrumbs" id="breadcrumbs">
+                <ul class="breadcrumb">
+                    <li>
+                        <i class="ace-icon fa fa-home home-icon"></i>
+                        <a href="#" data-th-href="@{/admin}" th:text="#{menu.home}"></a>
+                    </li>
+
+                    <li>
+                        <a href="#" th:text="#{menu.system}"></a>
+                    </li>
+                    <li class="active" >
+                        <a data-th-href="@{/user/list}" th:text="#{menu.users}"></a>
+                    </li>
+                </ul><!-- /.breadcrumb -->
+            </div>
+
+            <div class="page-content">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h4 class="page-header">
+                            <small>
+                                <span data-th-text="#{user.edit.head.title}"></span>
+                            </small>
+                        </h4>
+                        <div class="col-sm-6">
+                            <form class="form-horizontal" action="#" data-th-action="@{/user/edit}" data-th-object="${user}" method="post">
+                                <div class="form-group alert alert-danger alert-dismissable" th:if="${#fields.hasErrors('*')}">
+                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                                    <p th:each="err : ${#fields.errors('*')}" th:text="${err}"></p>
+                                </div>
+                                <div class="alert alert-danger alert-dismissable" th:if="${error != null}">
+                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                                    <p data-th-text="${error}">Error!</p>
+                                </div>
+                                <div class="form-group required">
+                                    <label class="col-sm-5 control-label" data-th-text="#{user.login}"></label>
+                                    <div class="col-sm-7">
+                                        <input type="text" hidden="hidden" data-th-value="*{id}" data-th-field="*{id}" />
+                                        <div class="input-group">
+                                            <span class="input-group-addon">
+                                                <i class="ace-icon fa fa-user"></i>
+                                            </span>
+                                            <input type="text" class="form-control" data-th-value="*{login}" data-th-field="*{login}"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-5 control-label" data-th-text="#{user.first_name}"></label>
+                                    <div class="col-sm-7">
+                                        <input type="text" class="form-control" data-th-value="*{firstName}" data-th-field="*{firstName}"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-5 control-label" data-th-text="#{user.last_name}"></label>
+                                    <div class="col-sm-7">
+                                        <input type="text" class="form-control" data-th-value="*{lastName}" data-th-field="*{lastName}"/>
+                                    </div>
+                                </div>
+                                <div class="form-group required">
+                                    <label class="col-sm-5 control-label" data-th-text="#{user.email}"></label>
+                                    <div class="col-sm-7">
+                                        <div class="input-group">
+                                            <span class="input-group-addon">
+                                                <i class="ace-icon fa fa-envelope"></i>
+                                            </span>
+                                            <input type="text" class="form-control"
+                                                   data-th-value="*{email}" data-th-field="*{email}"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-5 control-label" data-th-text="#{user.phone}"></label>
+                                    <div class="col-sm-7">
+                                        <div class="input-group">
+                                            <span class="input-group-addon">
+                                                <i class="ace-icon fa fa-phone"></i>
+                                            </span>
+
+                                            <input type="text" class="form-control input-mask-phone"
+                                                   data-th-value="*{phone}" data-th-field="*{phone}"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-5 control-label" data-th-text="#{user.role}"></label>
+                                    <div class="col-sm-7">
+                                        <select class="form-control" th:id="*{role}" th:field="*{role}">
+                                            <option th:each="role : ${roles}"
+                                                    th:value="${{role}}"
+                                                    th:text="${role}"></option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-5 control-label" data-th-text="#{user.status}"></label>
+                                    <div class="col-sm-7">
+                                        <select class="form-control" th:id="*{enabled}" th:field="*{enabled}">
+                                            <option value="1" th:text="#{user.enabled}"></option>
+                                            <option value="0" th:text="#{user.disabled}"></option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-sm-offset-5 col-sm-7">
+                                        <a href="#" class="btn btn-xs btn-default" data-th-href="@{/user/list}" th:text="#{button.back}"></a>
+                                        &#160;
+                                        <button type="submit" class="btn btn-xs btn-success" data-th-text="#{button.save}">Save</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>  <!-- /.col-lg-12 -->
+                </div><!-- /.page-content -->
+            </div>
+        </div><!-- /.main-content -->
+    </div>
+
+    <script type="text/javascript">
+
+    </script>
+
+    <div data-th-replace="fragments/admin-template :: footer"></div>
+
+</div><!-- /.main-container -->
+</body>
+
+
+</html>
+

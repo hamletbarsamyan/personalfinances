@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:th="http://www.thymeleaf.org">
+
+<head data-th-replace="fragments/template :: head">
+
+</head>
+
+<body class="no-skin">
+	<div data-th-replace="fragments/template :: navbar"></div>
+
+	<div class="main-container" id="main-container">
+		<div data-th-replace="fragments/template :: sidebar"></div>
+
+		<div class="main-content">
+			<div class="main-content-inner">
+				<div class="breadcrumbs" id="breadcrumbs">
+					<ul class="breadcrumb">
+						<li>
+							<i class="ace-icon fa fa-home home-icon"></i>
+							<a href="#" data-th-href="@{/home}" th:text="#{menu.home}">Home</a>
+						</li>
+
+						<li>
+							<a href="#" th:text="#{menu.settings}">settings</a>
+						</li>
+						<li class="active" th:text="#{menu.categories}">categories</li>
+					</ul><!-- /.breadcrumb -->
+				</div>
+
+				<div class="page-content">
+					<div class="page-header">
+						<h1 class="lighter blue">
+							<small>
+								<span data-th-text="#{category.categories}"></span>
+							</small>
+							<div class="row pull-right">
+								<div class="col-xs-12">
+									<a href="#categoryDialog" data-toggle="modal" class="btn btn-xs btn-primary"
+									   onclick="addCategory();" th:text="#{category.add}">
+									</a>
+								</div>
+							</div>
+						</h1>
+					</div><!-- /.page-header -->
+
+					<div class="row">
+						<div class="col-xs-12">
+							<!-- PAGE CONTENT BEGINS -->
+							<div class="row">
+								<div class="col-xs-10">
+									<div class="alert alert-danger alert-dismissable" th:if="${error != null}">
+										<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+										<h4 data-th-text="${error}">Error!</h4>
+									</div>
+									<div class="alert alert-success alert-dismissable" th:if="${message != null}">
+										<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+										<h4 data-th-text="${message}">Success!</h4>
+									</div>
+									<br />
+									<!-- Results block -->
+									<div id="resultsBlock" data-loading-text="<i class='fa fa-spinner fa-spin></i>'">
+										<div class="col-sm-10">
+											<table class="table table-bordered">
+												<thead>
+												<tr>
+													<th data-th-text="#{category.categories}"></th>
+												</tr>
+												</thead>
+												<tbody>
+													<tr>
+														<td>
+															<ul id="categoryTree" class="tree tree-unselectable tree-folder-select" role="tree">
+																<div data-th-each="category : ${categories}" th:remove="tag">
+																	<li th:if="${category.childs == null}" role="treeitem" class="tree-item">
+																		<span class="tree-item-name">
+																			<span class="tree-label">
+																				&#160;&#160;&#160;&#160;&#160;
+																				<span class="categoryCircle" th:style="'background-color:' + ${category.color}"
+																					  th:if="${!#strings.isEmpty(category.icon)}">
+																					 <span th:utext="${category.icon}"></span>
+																				</span>
+																				<span class="categoryLabel" th:text="${category.name}"></span>
+																			</span>
+																		</span>
+																		<div th:include="category/category-links::link-div(cat=${category})"
+																			 style="float: right;">
+																		</div>
+																	</li>
+																	<li th:if="${category.childs != null}" aria-expanded="false" role="treeitem" class="tree-branch">
+																		<i class="icon-caret ace-icon tree-plus"></i>&nbsp;
+																		<div class="tree-branch-header">
+																		<span class="tree-branch-name">
+																			<span class="tree-item-name">
+																			<span class="tree-label">
+																				<span class="categoryCircle" th:style="'background-color:' + ${category.color}"
+																					  th:if="${!#strings.isEmpty(category.icon)}">
+																					 <span th:utext="${category.icon}"></span>
+																				</span>
+																				<span class="categoryLabel" th:text="${category.name}"></span>
+																			</span>
+																		</span>
+																		</span>
+																			<div th:include="category/category-links::link-div(cat=${category})"
+																				 style="float: right;">
+																			</div>
+																		</div>
+																		<ul role="group" class="tree-branch-children hidden">
+																			<li data-th-each="childCategory : ${category.childs}" role="treeitem" class="tree-item">
+																			<span class="tree-item-name">
+																				<span class="tree-item-name">
+																					<span class="tree-label">
+																						<span class="categoryCircle" th:style="'background-color:' + ${childCategory.color}"
+																							  th:if="${!#strings.isEmpty(childCategory.icon)}">
+																							 <span th:utext="${childCategory.icon}"></span>
+																						</span>
+																						<span class="categoryLabel" th:text="${childCategory.name}"></span>
+																					</span>
+																				</span>
+																			</span>
+																				<div th:include="category/category-links::link-div(cat=${childCategory})"
+																					 style="float: right;">
+																				</div>
+																			</li>
+																		</ul>
+																		<div role="alert" class="tree-loader hidden">
+																			<div class="tree-loading"><i class="ace-icon fa fa-refresh fa-spin blue"></i></div>
+																		</div>
+																	</li>
+																</div>
+															</ul>
+														</td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+							</div><!-- /.row -->
+
+						</div>
+
+					</div><!-- /.page-content -->
+				</div>
+			</div><!-- /.main-content -->
+		</div>
+
+		<!-- Category Dialog -->
+		<div id="categoryDialog" class="modal" role="dialog" aria-labelledby="categoryDialog" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div id="categoryDialogContentDiv">
+				</div>
+			</div>
+		</div>
+
+		<!-- Delete Dialog -->
+		<div class="modal" id="confirmDelete" role="dialog" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<form id="deleteCategoryForm" class="form-horizontal" action="#" data-th-action="@{/category/delete}" method="post">
+						<input type="hidden" id="deleteCategoryId" name="id" />
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+							<h4 class="modal-title" th:text="#{category.delete}"></h4>
+						</div>
+						<div class="modal-body">
+							<p th:text="#{category.delete.confirm}"></p>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-xs btn-default" data-dismiss="modal" th:text="#{button.cancel}"></button>
+							<button type="submit" class="btn btn-xs btn-danger" id="confirm" th:text="#{button.delete}"></button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+
+		<div data-th-replace="fragments/template :: footer"></div>
+
+		<script type="text/javascript">
+			$(document).ready(function() {
+				$('#confirmDelete').on('show.bs.modal', function (e) {
+					$categoryId = $(e.relatedTarget).attr('data-id');
+					$('#deleteCategoryId').val($categoryId);
+				});
+
+				$('.tree-minus').click(function() {
+                    closeFolder(this);
+                });
+
+                $('.tree-plus').click(function() {
+                    openFolder(this);
+                });
+
+                function openFolder(el) {
+                    var $el = $(el);
+
+                    var $branch = $el.closest('.tree-branch');
+                    var $treeFolderContent = $branch.find('.tree-branch-children');
+                    var $treeFolderContentFirstChild = $treeFolderContent.eq(0);
+
+                    //take care of the styles
+                    $branch.addClass('tree-open');
+                    $branch.attr('aria-expanded', 'true');
+                    $treeFolderContentFirstChild.removeClass('hide hidden'); // jQuery deprecated hide in 3.0. Use hidden instead. Leaving hide here to support previous markup
+                    $branch.find('> .tree-branch-header .icon-folder').eq(0)
+                        .removeClass('glyphicon-folder-close')
+                        .addClass('glyphicon-folder-open');
+
+                    $el.removeClass('tree-plus');
+                    $el.addClass('tree-minus');
+
+                    $el.off('click');
+                    $el.click(function(){
+                        closeFolder(this);
+                    });
+                }
+
+                function closeFolder(el) {
+                    var $el = $(el);
+                    var $branch = $el.closest('.tree-branch');
+                    var $treeFolderContent = $branch.find('.tree-branch-children');
+                    var $treeFolderContentFirstChild = $treeFolderContent.eq(0);
+
+                    //take care of the styles
+                    $branch.removeClass('tree-open');
+                    $branch.attr('aria-expanded', 'false');
+                    $treeFolderContentFirstChild.addClass('hidden');
+                    $branch.find('> .tree-branch-header .icon-folder').eq(0)
+                        .removeClass('glyphicon-folder-open')
+                        .addClass('glyphicon-folder-close');
+
+                    $el.removeClass('tree-minus');
+                    $el.addClass('tree-plus');
+
+                    $el.off('click');
+                    $el.click(function(){
+                        openFolder(this);
+                    });
+				}
+			});
+
+            function addCategory() {
+                $('#categoryDialogContentDiv').html('<div class="cp-spinner cp-skeleton"></div>').load('add');
+            }
+
+            function editCategory(categoryId) {
+                $('#categoryDialogContentDiv').html('<div class="cp-spinner cp-skeleton"></div>').load('edit?id=' + categoryId);
+            }
+		</script>
+
+	</div><!-- /.main-container -->
+</body>
+
+
+</html>
+

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:th="http://www.thymeleaf.org">
+
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+        <meta charset="utf-8" />
+        <title th:text="#{login.page.title}"></title>
+
+        <meta name="description" th:content="#{common.login.description}" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+
+        <!-- bootstrap & fontawesome -->
+        <link type="text/css" rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
+
+        <link type="text/css" rel="stylesheet" data-th-href="@{/font-awesome/4.7.0/css/font-awesome.min.css}"/>
+
+        <!-- text fonts -->
+        <link rel="stylesheet" data-th-href="@{/fonts/fonts.googleapis.com.css}"/>
+
+        <!-- ace styles -->
+        <link rel="stylesheet" data-th-href="@{/css/ace.min.css}"/>
+
+        <!--[if lte IE 9]>
+        <link rel="stylesheet" data-th-href="@{/css/ace-part2.min.css}"/>
+        <![endif]-->
+
+        <link rel="stylesheet" data-th-href="@{/css/ace-rtl.min.css}"/>
+
+        <!--[if lte IE 9]>
+        <link rel="stylesheet" data-th-href="@{/css/ace-ie.min.css}"/>
+        <![endif]-->
+
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+
+        <!--[if lt IE 9]>
+        <script data-th-href="@{/js/html5shiv.min.js}"></script>
+        <script data-th-href="@{/js/respond.min.js}"></script>
+        <![endif]-->
+        <script>
+            var ctx = document.head.querySelector("[name=ctx]").content;
+        </script>
+    </head>
+
+<body class="login-layout">
+    <div class="main-container" id="main-container">
+        <div class="main-content">
+            <div class="row">
+                <div class="col-sm-10 col-sm-offset-1">
+                    <div class="login-container">
+                        <div class="center">
+                            <h4 class="blue" id="id-company-text" th:text="#{common.company}"></h4>
+                        </div>
+                        <div class="space-6"></div>
+                        <div class="position-relative">
+                            <div id="login-box" class="login-box visible widget-box no-border" style="border: 1px solid #AAAAAA;">
+                                <div class="widget-body">
+                                    <div class="widget-main">
+                                        <h4 class="header blue lighter bigger">
+                                            <i class="ace-icon fa fa-coffee green"></i>
+                                            <span th:text="#{user.enter.information.msg}"></span>
+                                        </h4>
+
+                                        <div class="space-6"></div>
+
+                                        <form name="f" data-th-action="@{/login}" method="post">
+                                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                                            <fieldset>
+                                                <div data-th-if="${param.error}" class="alert alert-danger">
+                                                    <span th:text="#{user.name.password.invalid}"></span>
+                                                </div>
+                                                <div data-th-if="${param.logout}" class="alert alert-success">
+                                                    <span th:text="#{user.logged.out.msg}"></span>
+                                                </div>
+                                                <div class="alert alert-danger alert-dismissable" th:if="${error != null}">
+                                                    <h4 data-th-text="${error}">Error!</h4>
+                                                </div>
+                                                <div class="alert alert-success alert-dismissable" th:if="${message != null}">
+                                                    <h4 data-th-text="${message}">Success!</h4>
+                                                </div>
+                                                <label class="block clearfix">
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon">
+                                                            <i class="ace-icon fa fa-user"></i>
+                                                        </span>
+                                                        <input class="form-control" th:placeholder="#{user.login}" type="text" id="username" name="username"/>
+                                                    </div>
+                                                </label>
+
+                                                <label class="block clearfix">
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon">
+                                                            <i class="ace-icon fa fa-key"></i>
+                                                        </span>
+                                                        <input class="form-control" th:placeholder="#{user.password}" type="password" id="password" name="password"/>
+                                                    </div>
+                                                </label>
+
+                                                <div class="space"></div>
+
+                                                <div class="clearfix">
+                                                    <button type="submit" class="width-35 pull-right btn btn-xs btn-primary">
+                                                        <i class="ace-icon fa fa-key"></i>
+                                                        <span class="bigger-110" th:text="#{user.login}">Login</span>
+                                                    </button>
+                                                </div>
+
+                                                <div class="space-10"></div>
+                                                <div class="clearfix">
+                                                    <a data-th-href="@{/user-public/forgot-password}" class="pull-left">
+                                                        <span th:text="#{user.forgot.your.password}"></span>
+                                                    </a>
+
+                                                    <a data-th-href="@{/user-public/register}" class="pull-right">
+                                                        <span th:text="#{user.register}"></span>
+                                                    </a>
+                                                </div>
+                                            </fieldset>
+                                        </form>
+                                    </div><!-- /.widget-main -->
+                                </div><!-- /.widget-body -->
+                            </div><!-- /.login-box -->
+                        </div><!-- /.position-relative -->
+                    </div>
+                </div><!-- /.col -->
+            </div>
+        </div>
+    </div>
+
+    <!-- basic scripts -->
+
+    <!--[if !IE]> -->
+    <script data-th-src="@{/js/jquery-2.1.4.min.js}"></script>
+
+    <!-- <![endif]-->
+
+    <!--[if IE]>
+    <script data-th-src="@{/js/jquery.1.11.1.min.js}"></script>
+    <![endif]-->
+
+    <!--[if !IE]> -->
+    <script type="text/javascript">
+        window.jQuery || document.write("<script src='/js/jquery.min.js'>"+"<"+"/script>");
+    </script>
+
+    <!-- <![endif]-->
+
+    <!--[if IE]>
+    <script type="text/javascript">
+        window.jQuery || document.write("<script src='/js/jquery1x.min.js'>"+"<"+"/script>");
+    </script>
+    <![endif]-->
+    <script type="text/javascript">
+        if('ontouchstart' in document.documentElement) document.write("<script src=' + ctx + '/static/js/jquery.mobile.custom.min.js'>"+"<"+"/script>");
+    </script>
+
+</body>
+</html>

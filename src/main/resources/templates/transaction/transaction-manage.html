@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+</head>
+
+<body>
+<div th:fragment="transactionFormDiv">
+    <form id="manageForm" class="form-horizontal" action="#" data-th-action="@{/transaction/save}" data-th-object="${transaction}"
+          method="post">
+        <input type="text" hidden="hidden" data-th-value="*{id}" data-th-field="*{id}" />
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h5 class="modal-title" th:text="${transaction.id == 0} ? #{transaction.add} : #{transaction.edit}">
+                </h5>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="col-sm-4 control-label"></label>
+                    <div class="col-sm-8">
+                        <div class="radio radio-info radio-inline">
+                            <input id="expense" type="radio" class="" name="transactionType" th:value="${T(am.jsl.personalfinances.domain.transaction.TransactionType).EXPENSE.value}"
+                                   th:field="*{transactionType}">
+                            <span class="label label-pink arrowed-in arrowed-right" th:text="#{transaction.type.expense}" onclick="checkTransactionType('expense')">
+                            </span>
+                        </div>
+                        <div class="radio radio-info radio-inline">
+                            <input id="income" type="radio" class="" name="transactionType" th:value="${T(am.jsl.personalfinances.domain.transaction.TransactionType).INCOME.value}"
+                                   th:field="*{transactionType}">
+                            <span class="label label-success arrowed-in-right arrowed" th:text="#{transaction.type.income}" onclick="checkTransactionType('income')">
+                            </span>
+                        </div>
+                        <div class="radio radio-info radio-inline">
+                            <input id="transfer" type="radio" class="" name="transactionType" th:value="${T(am.jsl.personalfinances.domain.transaction.TransactionType).TRANSFER.value}"
+                                   th:field="*{transactionType}">
+                            <span class="label arrowed arrowed-right" th:text="#{transaction.type.transfer}" onclick="checkTransactionType('transfer')">
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <h5 class="header smaller lighter blue"></h5>
+                <div class="form-group">
+                    <label class="col-sm-4 control-label" th:text="#{transaction.account}">
+                    </label>
+                    <div class="col-sm-8">
+                        <div class="radio radio-info radio-inline" th:each="account : ${accounts}">
+                            <input th:id="'account' + ${account.id}" type="radio" class="account" name="accountId"
+                                   th:attr="currency=${account.currency}" th:value="${account.id}" th:data="${account.symbol}"
+                                   th:field="*{accountId}">
+                            <span th:style="'background-color:' + ${account.color}" class="label"
+                                  th:onclick="'javascript:accountChanged(\'account' + ${account.id} + '\')'">
+                                <span style="font-family: 'FontAwesome';" th:utext="${account.icon}"></span>
+                                <span th:text="' ' + ${account.name} + ' ' + ${account.symbol}"></span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-4 control-label" th:text="#{transaction.category}">
+                    </label>
+                    <div class="col-sm-8">
+                        <div class="input-group">
+                            <select id="category" th:field="*{categoryId}" th:value="${categoryId}"
+                                    style="font-family: 'FontAwesome';">
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group required">
+                    <label class="col-sm-4 control-label" data-th-text="#{common.amount}"></label>
+                    <div class="col-sm-8">
+                        <input id="amount" type="text" class="numeric" data-th-value="${amount}" data-th-field="*{amount}"/>
+                        <span id="currency"></span>
+                    </div>
+                </div>
+
+                <div id="transferDiv" th:style="${!transaction.transfer ? 'display: none;' : ''}">
+                    <h5 class="header smaller lighter blue"></h5>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" th:text="#{transaction.target_account}">
+                        </label>
+                        <div class="col-sm-8">
+                            <div class="radio radio-info radio-inline" th:each="account : ${accounts}">
+                                <input th:id="'targetAccount' + ${account.id}" type="radio" class="account" name="targetAccountId"
+                                       th:attr="currency=${account.currency}" th:value="${account.id}" th:data="${account.symbol}"
+                                       th:field="*{targetAccountId}">
+                                <span th:style="'background-color:' + ${account.color}" class="label"
+                                      th:onclick="'javascript:targetAccountChanged(\'targetAccount' + ${account.id} + '\')'">
+                                <span style="font-family: 'FontAwesome';" th:utext="${account.icon}"></span>
+                                <span th:text="' ' + ${account.name} + ' ' + ${account.symbol}"></span>
+                            </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" data-th-text="#{common.currency.rate}"></label>
+                        <div class="col-sm-8">
+                            <input id="exchangeRate" type="text" class="exchangeRate" data-th-value="${exchangeRate}" data-th-field="*{exchangeRate}"/>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" data-th-text="#{transaction.converted_amount}"></label>
+                        <div class="col-sm-8">
+                            <input type="text" class="numeric" data-th-value="${convertedAmount}" data-th-field="*{convertedAmount}"/>
+                            <span id="convertedCurrency"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-4 control-label" data-th-text="#{common.date}"></label>
+                    <div class="col-sm-8">
+                        <input type="text" class="date-time-picker"
+                               data-th-value="*{transactionDate}"
+                               data-th-field="*{transactionDate}"/>
+                    </div>
+                </div>
+                <div class="accordion-style1 panel-group" id="accordion">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h5 class="panel-title">
+                                <a href="#collapseOne" data-parent="#accordion" data-toggle="collapse" class="accordion-toggle collapsed" aria-expanded="false"
+                                    th:onclick="'loadContacts(' + ${transaction.contactId} + ');'">
+                                    <i data-icon-show="ace-icon fa fa-angle-right" data-icon-hide="ace-icon fa fa-angle-down" class="bigger-110 ace-icon fa fa-angle-right"></i>
+                                    &nbsp;<span th:text="#{common.advanced}"></span>
+                                </a>
+                            </h5>
+                        </div>
+
+                        <div id="collapseOne" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
+                            <div class="panel-body">
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label" th:text="#{transaction.contact}">
+                                    </label>
+                                    <div class="col-sm-8">
+                                        <select id="contact" th:field="*{contactId}" th:value="${contactId}">
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label" data-th-text="#{transaction.description}"></label>
+                                    <div class="col-sm-8">
+                                        <textarea class="form-control" id="description"  data-th-value="*{description}"
+                                                  data-th-field="*{description}"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-xs btn-default" data-dismiss="modal" th:text="#{button.cancel}"></button>
+                &#160;
+                <button type="button" class="btn btn-xs btn-success" data-th-text="#{button.save}" onclick="saveTransaction();">save</button>
+            </div>
+        </div>
+    </form>
+
+    <form id="convertForm" method="post" action="#" data-th-action="@{/currency/convert}">
+        <input type="text" hidden="hidden" id="convertAmount" name="amount"/>
+        <input type="text" hidden="hidden" id="convertRate" name="rate"/>
+        <input type="text" hidden="hidden" id="from" name="from"/>
+        <input type="text" hidden="hidden" id="to" name="to"/>
+    </form>
+
+    <link type="text/css" rel="stylesheet" href="/css/bootstrap-datetimepicker.min.css"
+          data-th-href="@{/css/bootstrap-datetimepicker.min.css}"/>
+
+    <script src="/js/jquery.number.min.js" data-th-src="@{/js/jquery.number.min.js}"></script>
+    <script src="/js/moment.min.js" data-th-src="@{/js/moment.min.js}"></script>
+    <script src="/js/bootstrap-datetimepicker.min.js" data-th-src="@{/js/bootstrap-datetimepicker.min.js}"></script>
+    <script src="/js/transaction-manage.js" data-th-src="@{/js/transaction-manage.js}"></script>
+
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        var categoryId = [[${transaction.categoryId}]];
+        /*]]>*/
+    </script>
+
+    <script type="text/javascript">
+        $(document).ready(function(e) {
+            initTransactionManage();
+        });
+    </script>
+</div>
+</body>
+</html>
+
+

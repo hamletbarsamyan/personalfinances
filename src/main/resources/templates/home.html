@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head data-th-replace="fragments/template :: head">
+
+</head>
+
+<body class="no-skin">
+<div data-th-replace="fragments/template :: navbar"></div>
+
+<div class="main-container" id="main-container">
+    <div data-th-replace="fragments/template :: sidebar"></div>
+
+    <div class="main-content">
+        <div class="main-content-inner">
+            <div class="page-content">
+                <div class="page-header">
+                    <h1 class="lighter blue">
+                        <small th:text="#{menu.home}">
+                            Home
+                        </small>
+                    </h1>
+                </div><!-- /.page-header -->
+
+                <div class="row">
+                    <div class="col-sm-8">
+                        <!--Transactions By Category-->
+                        <div class="widget-box">
+                            <div class="widget-header widget-header-flat widget-header-small">
+                                <h6 class="widget-title">
+                                    <i class="menu-icon glyphicon glyphicon-list-alt"></i>
+                                    <span th:text="#{transaction.transactions.by.category}"></span>
+                                </h6>
+                                <div class="widget-toolbar no-border" style="width: 100%; font-size: 10px;">
+                                    <form id="pieChartForm" class="form-compact" role="form">
+                                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                                        <div class="col-xs-12">
+                                            <div class="row">
+                                                <div class="form-group col-md-3 col-sm-4 col-xs-6">
+                                                    <select id="type" name="type" class="form-control">
+                                                        <option th:value="${T(am.jsl.personalfinances.domain.transaction.TransactionType).EXPENSE.value}"
+                                                                th:text="#{transaction.type.expense}"></option>
+                                                        <option th:value="${T(am.jsl.personalfinances.domain.transaction.TransactionType).INCOME.value}"
+                                                                th:text="#{transaction.type.income}"></option>
+                                                        <option th:value="${T(am.jsl.personalfinances.domain.transaction.TransactionType).TRANSFER.value}"
+                                                                th:text="#{transaction.type.transfer}"></option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group col-md-4 col-sm-4 col-xs-6">
+                                                    <input id="daterange" name="daterange" type="text" class="form-control"/>
+                                                </div>
+                                                <div class="form-group col-md-4 col-sm-4 col-xs-6">
+                                                    <select id="account" name="account" class="form-control"
+                                                            style="font-family: 'FontAwesome';">
+                                                    </select>
+                                                </div>
+                                                <div class="form-group col-md-1 col-sm-1 col-xs-1">
+                                                    <a href="javascript:void(0);" onclick="javascript:loadPieChartData()" class="green">
+                                                        <i th:title="#{common.reload}" class="ace-icon fa fa-refresh bigger-130"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <div class="widget-body">
+                                <div class="widget-main">
+                                    <div id="piechart-placeholder"></div>
+                                    <div class="hr hr8 hr-double"></div>
+                                    <div class="clearfix">
+                                        <div class="grid3">
+                                            <span class="grey" th:text="#{common.total}">
+                                            </span>:
+                                            <span id="pieChartTotal" class="bigger pull-right">0</span>
+                                        </div>
+                                    </div>
+                                </div><!-- /.widget-main -->
+                            </div><!-- /.widget-body -->
+                        </div><!-- /.widget-box -->
+                        <br/>
+                        <br/>
+                        <!--Account Status-->
+                        <div class="widget-box">
+                            <div class="widget-header widget-header-flat widget-header-small">
+                                <h6 class="widget-title">
+                                    <i class="menu-icon glyphicon glyphicon-signal"></i>
+                                    <span th:text="#{account.accounts_overview}"></span>
+                                </h6>
+                                <div class="widget-toolbar no-border" style="width: 100%; font-size: 10px;">
+                                    <form id="accountsForm" class="form-compact" role="form">
+                                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                                        <div class="col-xs-12">
+                                            <div class="row">
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <div class="widget-body">
+                                <div class="widget-main">
+                                    <div id="accountsBody" class="col-sm-12  infobox-container">
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div><!-- /.widget-main -->
+                            </div><!-- /.widget-body -->
+                        </div><!-- /.widget-box -->
+                    </div><!-- /.col -->
+
+                </div><!-- /.page-content -->
+            </div>
+        </div><!-- /.main-content -->
+    </div>
+
+    <div data-th-replace="fragments/template :: footer"></div>
+
+    <link type="text/css" rel="stylesheet" href="../../css/daterangepicker.css"
+          data-th-href="@{/css/daterangepicker.css}"/>
+
+    <script src="../../js/jquery.easypiechart.min.js" data-th-src="@{/js/jquery.easypiechart.min.js}"></script>
+
+    <script src="../../js/jquery.sparkline.index.min.js" data-th-src="@{/js/jquery.sparkline.index.min.js}"></script>
+    <script src="../../js/jquery.flot.min.js" data-th-src="@{/js/jquery.flot.min.js}"></script>
+    <script src="../../js/jquery.flot.pie.min.js" data-th-src="@{/js/jquery.flot.pie.min.js}"></script>
+    <script src="../../js/jquery.flot.resize.min.js" data-th-src="@{/js/jquery.flot.resize.min.js}"></script>
+
+    <script src="../../js/moment.min.js" data-th-src="@{/js/moment.min.js}"></script>
+    <script src="../../js/daterangepicker.js" data-th-src="@{/js/daterangepicker.js}"></script>
+    <script src="../../js/home.js" data-th-src="@{/js/home.js}"></script>
+    <script src="../../js/common.js" data-th-src="@{/js/common.js}"></script>
+
+    <script type="text/javascript">
+        var placeholder = $('#piechart-placeholder').css({'width':'90%' , 'min-height':'250px'});
+
+        $(document).ready(function() {
+            $('.easy-pie-chart.percentage').each(function(){
+                var $box = $(this).closest('.infobox');
+                var barColor = $(this).data('color') || (!$box.hasClass('infobox-dark') ? $box.css('color') : 'rgba(255,255,255,0.95)');
+                var trackColor = barColor == 'rgba(255,255,255,0.95)' ? 'rgba(255,255,255,0.25)' : '#E2E2E2';
+                var size = parseInt($(this).data('size')) || 50;
+                $(this).easyPieChart({
+                    barColor: barColor,
+                    trackColor: trackColor,
+                    scaleColor: false,
+                    lineCap: 'butt',
+                    lineWidth: parseInt(size/10),
+                    animate: ace.vars['old_ie'] ? false : 1000,
+                    size: size
+                });
+            });
+
+            initDaterangepicker();
+
+            var data = [];
+            placeholder.data('chart', data);
+            placeholder.data('draw', drawPieChart);
+
+
+            //pie chart tooltip example
+            var $tooltip = $("<div class='tooltip top in'><div class='tooltip-inner'></div></div>").hide().appendTo('body');
+            var previousPoint = null;
+
+            placeholder.on('plothover', function (event, pos, item) {
+                if(item) {
+                    if (previousPoint != item.seriesIndex) {
+                        previousPoint = item.seriesIndex;
+                        var series = item.series;
+                        var percent = parseFloat(series.percent).toFixed(2);
+                        var tip = series['label'] + " : " + percent+'%' + ' (' + series['total'] + series['symbol'] + ')';
+                        $tooltip.show().children(0).text(tip);
+                    }
+                    $tooltip.css({top:pos.pageY + 10, left:pos.pageX + 10});
+                } else {
+                    $tooltip.hide();
+                    previousPoint = null;
+                }
+            });
+
+            var accountUrl = ctx + '/userhtml/' + currentUserId + '/account-lookup.html';
+            var $pieChartAccount = $pieChartForm.find('#account');
+            $pieChartAccount.html('<i class="ace-icon fa fa-spinner fa-spin orange bigger-125"></i>').load(accountUrl, function () {
+                $pieChartAccount.find("option").eq(0).remove();
+                loadPieChartData();
+            });
+
+            loadAccountsOverview();
+        });
+
+        function loadPieChartData() {
+            $.ajax({
+                type : "POST",
+                url : "dashboard/pieChartData",
+                data: $pieChartForm.serializeArray(),
+                success : function(response) {
+                    var result = response.result;
+                    var list = result.list;
+                    var chartData = [];
+
+                    for (var i = 0; i < list.length; i++) {
+                        var tr = list[i];
+                        var catTransaction = {};
+                        catTransaction.label = tr.category;
+                        catTransaction.data = tr.percent;
+                        catTransaction.total = tr.totalStr;
+                        catTransaction.symbol = tr.symbol;
+                        catTransaction.color = tr.categoryColor;
+                        chartData.push(catTransaction);
+                    }
+                    $('#pieChartTotal').text(result.totalStr);
+
+                    if (chartData.length > 0) {
+                        try {
+                            drawPieChart(placeholder, chartData);
+                        } catch (e) {
+                        }
+                    } else {
+                        placeholder.empty();
+                    }
+                }
+            });
+        }
+
+        function drawPieChart(placeholder, data, position) {
+            $.plot(placeholder, data, {
+                series: {
+                    pie: {
+                        show: true,
+                        tilt:1,
+                        highlight: {
+                            opacity: 0.25
+                        },
+                        stroke: {
+                            color: '#fff',
+                            width: 2
+                        },
+                        startAngle: 2
+                    }
+                },
+                legend: {
+                    show: true,
+                    position: position || "ne",
+                    labelBoxBorderColor: null,
+                    margin:[-30,15],
+                    labelFormatter: function(label, series) {
+                        var percent= Math.round(series.percent);
+                        var number= series.data[0][1];
+                        return('&nbsp;<b>'+label+'</b>:&nbsp;'+ percent + '%' + ' (' + series['total'] + series['symbol'] + ')');
+                    }
+                },
+                grid: {
+                    hoverable: true,
+                    clickable: true
+                }
+            })
+        }
+    </script>
+
+</div><!-- /.main-container -->
+</body>
+
+
+</html>
+

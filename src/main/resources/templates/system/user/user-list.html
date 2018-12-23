@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:th="http://www.thymeleaf.org">
+
+<head data-th-replace="fragments/admin-template :: head">
+
+</head>
+
+<body class="no-skin">
+	<div data-th-replace="fragments/admin-template :: navbar"></div>
+
+	<div class="main-container" id="main-container">
+		<div data-th-replace="fragments/admin-template :: sidebar"></div>
+
+		<div class="main-content">
+			<div class="main-content-inner">
+				<div class="breadcrumbs" id="breadcrumbs">
+					<ul class="breadcrumb">
+						<li>
+							<i class="ace-icon fa fa-home home-icon"></i>
+							<a href="#" data-th-href="@{/admin}" th:text="#{menu.home}">Home</a>
+						</li>
+
+						<li>
+							<a href="#" th:text="#{menu.system}">System</a>
+						</li>
+						<li class="active" th:text="#{menu.users}">Users</li>
+					</ul><!-- /.breadcrumb -->
+				</div>
+
+				<div class="page-content">
+					<div class="page-header">
+						<h1 class="lighter blue">
+							<small>
+								<span data-th-text="#{user.list.table.title}"></span>
+							</small>
+
+							<div class="row pull-right">
+								<div class="col-xs-12">
+									<a href="#" class="btn btn-xs btn-primary" data-th-href="@{/user/add}" th:text="#{user.list.add.title}"></a>
+								</div>
+							</div>
+						</h1>
+					</div><!-- /.page-header -->
+
+					<div class="row">
+						<div class="col-xs-12">
+							<!-- PAGE CONTENT BEGINS -->
+							<div class="row">
+								<div class="col-xs-12">
+									<div class="alert alert-danger alert-dismissable" th:if="${error != null}">
+										<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+										<h4 data-th-text="${error}">Error!</h4>
+									</div>
+									<div class="alert alert-success alert-dismissable" th:if="${message != null}">
+										<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+										<h4 data-th-text="${message}">Success!</h4>
+									</div>
+									<br />
+									<!-- Results block -->
+									<div id="resultsBlock" data-loading-text="<i class='fa fa-spinner fa-spin></i>'">
+									</div>
+								</div>
+							</div><!-- /.row -->
+
+						</div>
+
+					</div><!-- /.page-content -->
+				</div>
+			</div><!-- /.main-content -->
+		</div>
+
+		<!-- Delete Dialog -->
+		<div class="modal" id="confirmDelete" role="dialog" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<form id="deleteUserForm" class="form-horizontal" action="#" data-th-action="@{/user/delete}" method="post">
+						<input type="hidden" id="deleteUserId" name="id" />
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+							<h4 class="modal-title" th:text="#{user.delete}"></h4>
+						</div>
+						<div class="modal-body">
+							<p th:text="#{user.delete.confirm}"></p>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-xs btn-default" data-dismiss="modal" th:text="#{button.cancel}"></button>
+							<button type="submit" class="btn btn-xs btn-danger" id="confirm" th:text="#{button.delete}"></button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+
+		<div data-th-replace="fragments/admin-template :: footer"></div>
+
+		<script type="text/javascript">
+			$(document).ready(function() {
+				loadUsers(1);
+
+				function loadUsers(page) {
+					var url = 'loadUsers?page=' + page;
+					$("#resultsBlock").html('<i class="ace-icon fa fa-spinner fa-spin orange bigger-125"></i>').load(url);
+				}
+
+				$('#confirmDelete').on('show.bs.modal', function (e) {
+					$userId = $(e.relatedTarget).attr('data-id');
+					$('#deleteUserId').val($userId);
+				});
+			});
+		</script>
+
+	</div><!-- /.main-container -->
+</body>
+
+
+</html>
+

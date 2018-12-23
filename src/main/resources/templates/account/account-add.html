@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head data-th-replace="fragments/template :: head">
+
+</head>
+
+<body class="no-skin">
+<div data-th-replace="fragments/template :: navbar"></div>
+
+<div class="main-container" id="main-container">
+    <div data-th-replace="fragments/template :: sidebar"></div>
+
+    <div class="main-content">
+        <div class="main-content-inner">
+            <div class="breadcrumbs" id="breadcrumbs">
+                <ul class="breadcrumb">
+                    <li>
+                        <i class="ace-icon fa fa-home home-icon"></i>
+                        <a href="#" data-th-href="@{/home}" th:text="#{menu.home}"></a>
+                    </li>
+
+                    <li>
+                        <a href="#" th:text="#{menu.settings}"></a>
+                    </li>
+                    <li class="active" >
+                        <a data-th-href="@{/account/list}" th:text="#{menu.accounts}"></a>
+                    </li>
+                </ul><!-- /.breadcrumb -->
+            </div>
+
+            <div class="page-content">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h4 class="page-header">
+                            <small>
+                                <span data-th-text="#{account.add}"></span>
+                            </small>
+                        </h4>
+                        <div class="col-sm-6">
+                            <form id="accountForm" class="form-horizontal" action="#" data-th-action="@{/account/add}" data-th-object="${account}"
+                                  method="post">
+                                <div class="form-group required">
+                                    <label class="col-sm-5 control-label" data-th-text="#{account.name}"></label>
+                                    <div class="col-sm-7">
+                                        <input id="symbol" type="text" hidden="hidden" data-th-value="*{symbol}" data-th-field="*{symbol}" />
+                                        <div class="clearfix">
+                                            <input id="name" type="text" class="form-control" data-th-value="*{name}" data-th-field="*{name}"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-5 control-label" data-th-text="#{account.account.type}"></label>
+                                    <div class="col-sm-7">
+                                        <select id="accountType" class="form-control"
+                                                data-th-value="*{accountType}" data-th-field="*{accountType}">
+                                            <option th:each="accountType : ${T(am.jsl.personalfinances.domain.account.AccountType).values()}"
+                                                    th:value="${accountType.value}"
+                                                    th:text="#{'account.account.type.' + ${accountType.value}}"></option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-5 control-label" data-th-text="#{common.balance}"></label>
+                                    <div class="col-sm-7">
+                                        <input type="text" class="form-control numeric" data-th-value="*{balance}" data-th-field="*{balance}"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-5 control-label" data-th-text="#{common.currency}"></label>
+                                    <div class="col-sm-7">
+                                        <select id="currency" class="form-control" th:value="${currency}" th:field="*{currency}">
+                                            <option th:each="curr : ${currencies}" class="currency"
+                                                    th:value="${curr.code}" th:data="${curr.symbol}"
+                                                    th:text="${curr.name} + ' (' + ${curr.symbol} + ')'"></option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-5 control-label" data-th-text="#{common.sort.order}"></label>
+                                    <div class="col-sm-7">
+                                        <input type="text" class="form-control integer" data-th-value="*{sortOrder}" data-th-field="*{sortOrder}"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-5 control-label" data-th-text="#{common.icon}"></label>
+                                    <div class="col-sm-7">
+                                        <select id="accountIcon" class="form-control" style="font-family: 'FontAwesome';"
+                                                data-th-value="*{icon}" data-th-field="*{icon}">
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-5 control-label" data-th-text="#{common.color}"></label>
+                                    <div class="col-sm-7">
+                                        <div class="input-group colorpicker-component">
+                                            <input id="color" type="text" data-th-value="*{color}" data-th-field="*{color}" class="form-control"
+                                                   style="color: black;"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-5 control-label" data-th-text="#{category.description}"></label>
+                                    <div class="col-sm-7">
+                                        <textarea class="form-control" id="description"  data-th-value="*{description}"
+                                                  data-th-field="*{description}"></textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-5 control-label" data-th-text="#{common.status}"></label>
+                                    <div class="col-sm-7">
+                                        <select class="form-control" th:id="*{active}" th:field="*{active}">
+                                            <option value="1" th:text="#{common.active}"></option>
+                                            <option value="0" th:text="#{common.inactive}"></option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-sm-offset-5 col-sm-7">
+                                        <a href="#" class="btn btn-xs btn-default" data-th-href="@{/account/list}" th:text="#{button.back}"></a>
+                                        &#160;
+                                        <button type="submit" class="btn btn-xs btn-success" data-th-text="#{button.add}">Save</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>  <!-- /.col-lg-12 -->
+                </div><!-- /.page-content -->
+            </div>
+        </div><!-- /.main-content -->
+    </div>
+
+    <div data-th-replace="fragments/template :: footer"></div>
+
+    <link type="text/css" rel="stylesheet" href="/js/bootstrap-colorpicker-plus/css/bootstrap-colorpicker.css"
+          data-th-href="@{/js/bootstrap-colorpicker-plus/css/bootstrap-colorpicker.css}"/>
+    <link type="text/css" rel="stylesheet" href="/js/bootstrap-colorpicker-plus/css/bootstrap-colorpicker-plus.css"
+          data-th-href="@{/js/bootstrap-colorpicker-plus/css/bootstrap-colorpicker-plus.css}"/>
+
+    <script src="/js/bootstrap-colorpicker-plus/js/bootstrap-colorpicker.js"
+            data-th-src="@{/js/bootstrap-colorpicker-plus/js/bootstrap-colorpicker.js}"></script>
+    <script src="/js/bootstrap-colorpicker-plus/js/bootstrap-colorpicker-plus.js"
+            data-th-src="@{/js/bootstrap-colorpicker-plus/js/bootstrap-colorpicker-plus.js}"></script>
+
+    <script src="/js/jquery.number.min.js" data-th-src="@{/js/jquery.number.min.js}"></script>
+    <script src="/js/jquery.validate.min.js" data-th-src="@{/js/jquery.validate.min.js}"></script>
+
+    <script type="text/javascript">
+        var $accountForm = $('#accountForm');
+        var $accountIcon = $accountForm.find("#accountIcon");
+
+        $accountIcon.html('<i class="ace-icon fa fa-spinner fa-spin orange bigger-125"></i>').load(ctx + '/html/font-awesome-options.html');
+
+        var $colorpic =  $accountForm.find('#color');
+        $colorpic.colorpickerplus();
+        $colorpic.on('changeColor', function(e,color){
+            if(color==null) {
+                $(this).val('transparent').css('background-color', '#fff');//transparent
+            } else {
+                $(this).val(color).css('background-color', color);
+            }
+        });
+
+        $accountForm.find(".numeric").number(true, 2);
+        $accountForm.find(".integer").number(true, 0);
+
+        setCurrency($accountForm.find('#currency option:first'));
+
+        $('#currency').on('change', function (e) {
+            var $optionSelected = $("option:selected", this);
+            setCurrency($optionSelected);
+        });
+
+        function setCurrency(radio) {
+            var currencySymbol = $(radio).attr('data');
+
+            if (currencySymbol) {
+                $accountForm.find('#symbol').val(currencySymbol);
+            }
+        }
+
+        $accountForm.validate({
+            errorElement: 'div',
+            errorClass: 'help-block',
+            focusInvalid: false,
+            ignore: "",
+            rules: {
+                name: {
+                    required: true
+                }
+            },
+            messages: {
+                name: {
+                    required: "Please provide a name."
+                }
+            },
+
+            highlight: function (e) {
+                $(e).closest('.form-group').removeClass('has-info').addClass('has-error');
+            },
+
+            success: function (e) {
+                $(e).closest('.form-group').removeClass('has-error');
+                $(e).remove();
+            },
+
+            errorPlacement: function (error, element) {
+                error.insertAfter(element.parent());
+            },
+
+            submitHandler: function (form) {
+                form.submit();
+            },
+            invalidHandler: function (form) {
+            }
+        });
+    </script>
+
+</div><!-- /.main-container -->
+</body>
+
+
+</html>
+

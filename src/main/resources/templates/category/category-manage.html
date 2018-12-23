@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+</head>
+
+<body>
+<div th:fragment="categoryFormDiv">
+    <form id="manageForm" class="form-horizontal" action="#" data-th-action="@{/category/save}" data-th-object="${category}"
+          method="post">
+        <input type="text" hidden="hidden" data-th-value="*{id}" data-th-field="*{id}" />
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h5 class="modal-title" th:text="${category.id == 0} ? #{category.add} : #{category.edit}">
+                </h5>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="col-sm-5 control-label" data-th-text="#{category.parent}"></label>
+                    <div class="col-sm-6">
+                        <select class="form-control" th:id="*{parentId}" th:field="*{parentId}" style="font-family: 'FontAwesome';">
+                            <option value="0"></option>
+                            <option th:each="cat : ${categories}"
+                                    th:value="${cat.id}"
+                                    th:text="${cat.name}"></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group required">
+                    <label class="col-sm-5 control-label" data-th-text="#{category.name}"></label>
+                    <div class="col-sm-6">
+                        <input type="text" hidden="hidden" data-th-value="*{id}" data-th-field="*{id}" />
+                        <div class="clearfix">
+                            <input id="name" type="text" class="form-control" data-th-value="*{name}" data-th-field="*{name}"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-5 control-label" data-th-text="#{common.icon}"></label>
+                    <div class="col-sm-6">
+                        <select id="categoryIcon" class="form-control" style="font-family: 'FontAwesome';"
+                                data-th-value="*{icon}" data-th-field="*{icon}">
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-5 control-label" data-th-text="#{common.color}"></label>
+                    <div class="col-sm-6">
+                        <div class="input-group colorpicker-component">
+                            <input id="color" type="text" data-th-value="*{color}" data-th-field="*{color}" class="form-control"
+                            th:style="'color: black; background-color:' + ${category.color}" />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-5 control-label" data-th-text="#{category.description}"></label>
+                    <div class="col-sm-6">
+                        <textarea class="form-control" id="description"  data-th-value="*{description}"
+                                  data-th-field="*{description}"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-xs btn-default" data-dismiss="modal" th:text="#{button.cancel}"></button>
+                &#160;
+                <button type="submit" class="btn btn-xs btn-success" data-th-text="#{button.save}">save</button>
+            </div>
+        </div>
+    </form>
+
+    <script src="/js/jquery.numeric.js" data-th-src="@{/js/jquery.numeric.js}"></script>
+
+    <link type="text/css" rel="stylesheet" href="/js/bootstrap-colorpicker-plus/css/bootstrap-colorpicker.css"
+          data-th-href="@{/js/bootstrap-colorpicker-plus/css/bootstrap-colorpicker.css}"/>
+    <link type="text/css" rel="stylesheet" href="/js/bootstrap-colorpicker-plus/css/bootstrap-colorpicker-plus.css"
+          data-th-href="@{/js/bootstrap-colorpicker-plus/css/bootstrap-colorpicker-plus.css}"/>
+
+    <script src="/js/bootstrap-colorpicker-plus/js/bootstrap-colorpicker.js"
+            data-th-src="@{/js/bootstrap-colorpicker-plus/js/bootstrap-colorpicker.js}"></script>
+    <script src="/js/bootstrap-colorpicker-plus/js/bootstrap-colorpicker-plus.js"
+            data-th-src="@{/js/bootstrap-colorpicker-plus/js/bootstrap-colorpicker-plus.js}"></script>
+
+    <script src="/js/jquery.validate.min.js" data-th-src="@{/js/jquery.validate.min.js}"></script>
+
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        var categoryIconValue = [[${category.icon}]];
+        /*]]>*/
+    </script>
+
+    <script type="text/javascript">
+        var $manageForm = $('#manageForm');
+
+        $(document).ready(function(e) {
+            $manageForm.find(".numeric").numeric();
+
+            var $categoryIcon = $manageForm.find("#categoryIcon");
+
+            $categoryIcon.html('<i class="ace-icon fa fa-spinner fa-spin orange bigger-125"></i>').load(ctx + '/html/font-awesome-options.html', function() {
+
+                if (categoryIconValue) {
+                    $categoryIcon.find('option[value="' + categoryIconValue + '"]').attr('selected', 'selected');
+                }
+            });
+
+            var $colorpic =  $manageForm.find('#color');
+            $colorpic.colorpickerplus();
+            $colorpic.on('changeColor', function(e,color){
+                if(color==null) {
+                    $(this).val('transparent').css('background-color', '#fff');//transparent
+                } else {
+                    $(this).val(color).css('background-color', color);
+                }
+            });
+
+            $manageForm.validate({
+                errorElement: 'div',
+                errorClass: 'help-block',
+                focusInvalid: false,
+                ignore: "",
+                rules: {
+                    name: {
+                        required: true
+                    }
+                },
+                messages: {
+                    name: {
+                        required: "Please provide a name."
+                    }
+                },
+
+                highlight: function (e) {
+                    $(e).closest('.form-group').removeClass('has-info').addClass('has-error');
+                },
+
+                success: function (e) {
+                    $(e).closest('.form-group').removeClass('has-error');//.addClass('has-info');
+                    $(e).remove();
+                },
+
+                errorPlacement: function (error, element) {
+                    error.insertAfter(element.parent());
+                },
+
+                submitHandler: function (form) {
+                    form.submit();
+                },
+                invalidHandler: function (form) {
+                }
+            });
+        });
+    </script>
+</div>
+</body>
+</html>
+
+

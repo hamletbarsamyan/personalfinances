@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+</head>
+
+<body>
+<div th:fragment="transactionFormDiv">
+    <form id="batchForm" class="form-horizontal" action="#" data-th-action="@{/transaction/addBatch}" data-th-object="${addTransaction}"
+          method="post">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h5 class="modal-title" th:text="#{transaction.add.multiple}"></h5>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="col-sm-4 control-label"></label>
+                    <div class="col-sm-8">
+                        <div class="radio radio-info radio-inline">
+                            <input id="expense" type="radio" class="" name="transactionType" th:value="${T(am.jsl.personalfinances.domain.transaction.TransactionType).EXPENSE.value}"
+                                   th:field="*{transactionType}">
+                            <span class="label label-pink arrowed-in arrowed-right" th:text="#{transaction.type.expense}" onclick="checkRadio('expense')">
+                            </span>
+                        </div>
+                        <div class="radio radio-info radio-inline">
+                            <input id="income" type="radio" class="" name="transactionType" th:value="${T(am.jsl.personalfinances.domain.transaction.TransactionType).INCOME.value}"
+                                   th:field="*{transactionType}">
+                            <span class="label label-success arrowed-in-right arrowed" th:text="#{transaction.type.income}" onclick="checkRadio('income')">
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <h5 class="header smaller lighter blue"></h5>
+                <div class="form-group">
+                    <label class="col-sm-4 control-label" th:text="#{transaction.account}">
+                    </label>
+                    <div class="col-sm-8">
+                        <div class="radio radio-info radio-inline" th:each="account : ${accounts}">
+                            <input th:id="'account' + ${account.id}" type="radio" class="account" name="accountId"
+                                   th:value="${account.id}" th:data="${account.symbol}"
+                                   th:field="*{accountId}">
+                            <span th:style="'background-color:' + ${account.color}" class="label"
+                                  th:onclick="'javascript:checkRadio(\'account' + ${account.id} + '\')'">
+                                <span style="font-family: 'FontAwesome';" th:utext="${account.icon}"></span>
+                                <span th:text="' ' + ${account.name} + ' ' + ${account.symbol}"></span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-4 control-label" data-th-text="#{common.date}"></label>
+                    <div class="col-sm-8">
+                        <input type="text" class="date-time-picker"
+                               data-th-value="*{transactionDate}"
+                               data-th-field="*{transactionDate}"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <table id="batchTable" class="table scrollable">
+                            <thead>
+                                <th width="45%" th:text="#{transaction.category}"></th>
+                                <th width="45%" th:text="#{common.amount}"></th>
+                                <th width="10%"></th>
+                            </thead>
+                            <tbody>
+                            <tr data-th-each="transaction, stat : *{transactions}" class="data">
+                                <td width="45%">
+                                    <select name="categoryId" class="category" style="font-family: 'FontAwesome';"
+                                            th:field="*{transactions[__${stat.index}__].categoryId}"
+                                            th:value="${transaction.categoryId}">
+                                    </select>
+                                </td>
+                                <td width="45%">
+                                    <input class="form-control input-sm numeric" th:field="*{transactions[__${stat.index}__].amount}"
+                                           th:value="${transaction.amount}" type="text"/>
+                                </td>
+                                <td width="10%">
+                                    <a href="javascript:void(0);" onclick="removeRow(this)" class="red">
+                                        <i class="ace-icon fa fa-trash-o bigger-130" th:title="#{button.remove}"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            </tbody>
+                            <tfoot>
+                            <tr>
+                                <td colspan="3" align="right">
+                                    <a href="javascript:void(0);" onclick="addRow()">
+                                        <span class="ui-icon ace-icon fa fa-plus-circle purple bigger-130" th:title="#{button.add}"></span>
+                                    </a>
+                                </td>
+                            </tr>
+                            </tfoot>
+                        </table>
+                        <div class="accordion-style1 panel-group" id="accordion">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h5 class="panel-title">
+                                        <a href="#collapseOne" data-parent="#accordion" data-toggle="collapse" class="accordion-toggle collapsed" aria-expanded="false"
+                                           th:onclick="'loadContacts();'">
+                                            <i data-icon-show="ace-icon fa fa-angle-right" data-icon-hide="ace-icon fa fa-angle-down" class="bigger-110 ace-icon fa fa-angle-right"></i>
+                                            &nbsp;<span th:text="#{common.advanced}"></span>
+                                        </a>
+                                    </h5>
+                                </div>
+
+                                <div id="collapseOne" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
+                                    <div class="panel-body">
+                                        <div class="form-group">
+                                            <label class="col-sm-4 control-label" th:text="#{transaction.contact}">
+                                            </label>
+                                            <div class="col-sm-8">
+                                                <select id="contact" th:field="*{contactId}" th:value="${contactId}">
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-4 control-label" data-th-text="#{transaction.description}"></label>
+                                            <div class="col-sm-8">
+                                        <textarea class="form-control" id="description"  data-th-value="*{description}"
+                                                  data-th-field="*{description}"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-xs btn-default" data-dismiss="modal" th:text="#{button.cancel}"></button>
+                &#160;
+                <button type="button" class="btn btn-xs btn-success" data-th-text="#{button.save}" onclick="addBatch();">save</button>
+            </div>
+        </div>
+    </form>
+
+    <link type="text/css" rel="stylesheet" href="/css/bootstrap-datetimepicker.min.css"
+          data-th-href="@{/css/bootstrap-datetimepicker.min.css}"/>
+
+    <script src="/js/jquery.number.min.js" data-th-src="@{/js/jquery.number.min.js}"></script>
+    <script src="/js/moment.min.js" data-th-src="@{/js/moment.min.js}"></script>
+
+    <script src="/js/bootstrap-datetimepicker.min.js" data-th-src="@{/js/bootstrap-datetimepicker.min.js}"></script>
+
+    <script type="text/javascript">
+        var $batchForm = $('#batchForm');
+        var $batchTableBody = $batchForm.find('#batchTable').find("tbody");
+
+        $(document).ready(function(e) {
+            $batchForm.find(".numeric").number(true, 2);
+
+            if(!ace.vars['old_ie']) $('.date-time-picker').datetimepicker({
+                format: 'DD/MM/YYYY HH:mm',
+                icons: {
+                    time: 'fa fa-clock-o',
+                    date: 'fa fa-calendar',
+                    up: 'fa fa-chevron-up',
+                    down: 'fa fa-chevron-down',
+                    previous: 'fa fa-chevron-left',
+                    next: 'fa fa-chevron-right',
+                    today: 'fa fa-arrows ',
+                    clear: 'fa fa-trash',
+                    close: 'fa fa-times'
+                }
+            }).next().on(ace.click_event, function(){
+                $(this).prev().focus();
+            });
+
+            loadCategories(function() {
+                // categories
+                var $category = $batchForm.find('.category');
+                $category.html($searchForm.find("#category").html());
+                $category.find("option").eq(0).remove();
+            });
+        });
+
+        function checkRadio(elementId) {
+            var $element = $batchForm.find("#" + elementId);
+            $($element).prop("checked", true);
+        }
+
+        function addRow() {
+            var $trLast = $batchTableBody.find("tr[class='data']:last");
+            var $trNew = $trLast.clone();
+            $trLast.after($trNew);
+
+            reindexTable();
+        }
+
+        function removeRow(link) {
+            if ($batchTableBody.find("tr[class='data']").length > 1) {
+                var $link = $(link);
+                $link.parent().parent().remove();
+                reindexTable();
+            }
+        }
+
+        function reindexTable() {
+            $batchTableBody.find("tr[class='data']").each(function(index, tr) {
+                $this = $(this);
+                var $category = $this.find("select.category");
+                $category.attr("id", "transactions" + index + ".categoryId");
+                $category.attr("name", "transactions[" + index + "].categoryId");
+
+                var $amount = $this.find("input.numeric");
+                $amount.attr("name", "transactions" + index + ".amount");
+                $amount.attr("name", "transactions[" + index + "].amount");
+            });
+        }
+
+        // contacts
+        var contcatsLoaded = false;
+        function loadContacts() {
+            if (!contcatsLoaded) {
+                loadSearchContacts(function(){
+                    var $contact = $batchForm.find('#contact');
+                    $contact.html($searchForm.find("#contact").html());
+                });
+                contcatsLoaded = true;
+            }
+        }
+
+        function addBatch() {
+            $.ajax({
+                type: "POST",
+                url: "addBatch",
+                data: $batchForm.serialize(),
+                success: function(data) {
+                    $('#trDialog').modal('hide');
+                    loadTransactions(1);
+                }
+            });
+        }
+    </script>
+</div>
+</body>
+</html>
+
+

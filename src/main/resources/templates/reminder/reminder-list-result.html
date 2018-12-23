@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+</head>
+
+<body>
+<div th:fragment="reminderResultsList" th:remove="tag">
+    <tr data-th-each="reminder : ${page.content}">
+        <td>
+            <div th:if="${reminder.parentCategory != null}" th:remove="tag">
+                <span class="categoryCircle" th:style="'background-color:' + ${reminder.parentCategoryColor}"
+                      th:if="${!#strings.isEmpty(reminder.parentCategoryIcon)}">
+                    <span th:utext="${reminder.parentCategoryIcon}"></span>
+                </span>
+                <span class="categoryLabel" th:text="${reminder.parentCategory}"></span>
+                <span class="categoryLabel">  >  </span>
+            </div>
+            <span class="categoryCircle" th:style="'background-color:' + ${reminder.categoryColor}"
+                  th:if="${!#strings.isEmpty(reminder.categoryIcon)}">
+                 <span th:utext="${reminder.categoryIcon}"></span>
+            </span>
+            <span class="categoryLabel" th:text="${reminder.category}"></span>
+        </td>
+        <td th:title="${#personalfinances.prettyTime(reminder.dueDate)}">
+            <span>
+                <i class="ace-icon fa fa-calendar bigger-110"></i>
+                <span th:text="${#dates.format(reminder.dueDate, 'MMM dd, yyyy')}"></span>
+            </span>&#160;&#160;
+            <span>
+                <i class="ace-icon fa fa-clock-o bigger-110"></i>
+                <span th:text="${#dates.format(reminder.dueDate, 'HH:mm')}"></span>
+            </span>
+        </td>
+        <td align="right">
+            <b th:class="${reminder.transactionTypeClass}"
+               th:title="#{'transaction.type.' + ${reminder.transactionType}}">
+                <span th:inline="text">[[${#numbers.formatDecimal(reminder.amount, 0, 'DEFAULT', 2, 'DEFAULT')}]]</span>
+                <span th:text="${reminder.symbol}"></span>
+            </b>
+        </td>
+        <td align="center">
+            <span th:class="${'label ' + (reminder.done ? 'label-success' : (reminder.active ? 'label-warning' : 'label-danger'))}"
+                  th:text="#{'reminder.status.' + ${reminder.status}}">
+            </span>
+        </td>
+        <td>
+            <div class="hidden-sm hidden-xs action-buttons btn-group center">
+                <a href="#remDialog" class="blue" data-toggle="modal"
+                   th:onclick="'javascript:viewReminder('+ ${reminder.id} + ')'">
+                    <i class="ace-icon fa fa-search bigger-130" th:title="#{common.details}"></i>
+                </a>
+                &#160;
+                <a href="#remDialog" class="green" data-toggle="modal"
+                   th:onclick="'javascript:editReminder('+ ${reminder.id} + ')'">
+                    <i class="ace-icon fa fa-pencil bigger-130" th:title="#{button.edit}"></i>
+                </a>
+                &#160;
+                <a href="#" class="red" th:data-id="${reminder.id}"
+                   data-toggle="modal" data-target="#confirmDelete">
+                    <i class="ace-icon fa fa-trash-o bigger-130" th:title="#{reminder.delete}"></i>
+                </a>
+            </div>
+
+            <div class="hidden-md hidden-lg">
+                <div class="inline pos-rel">
+                    <button class="btn btn-minier btn-primary dropdown-toggle" data-toggle="dropdown" data-position="auto">
+                        <i class="ace-icon fa fa-cog icon-only bigger-110"></i>
+                    </button>
+
+                    <ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
+                        <li>
+                            <a href="#remDialog" class="blue" data-toggle="modal"
+                               th:onclick="'javascript:viewReminder('+ ${reminder.id} + ')'">
+                                <i class="ace-icon fa fa-search bigger-130" th:title="#{common.details}"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#remDialog" class="green" data-toggle="modal"
+                               th:onclick="'javascript:editReminder('+ ${reminder.id} + ')'">
+                                <i class="ace-icon fa fa-pencil bigger-130" th:title="#{button.edit}"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="red" th:data-id="${reminder.id}"
+                               data-toggle="modal" data-target="#confirmDelete">
+                                <i class="ace-icon fa fa-trash-o bigger-130" th:title="#{reminder.delete}"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </td>
+    </tr>
+    <tr th:unless="${#lists.isEmpty(page.content)}" style="background-color: #f4f9fc;">
+        <td colspan="5">
+            <div class="row">
+                <div class="col-xs-6">
+                    <span th:text="#{table.total.records(${page.dataCount})}" style="white-space: nowrap;"></span>&#160;&#160;
+                </div>
+                <div class="col-xs-6">
+                    <div class="dataTables_paginate paging_simple_numbers" id="dynamic-table_paginate">
+                        <ul class="pagination">
+                            <li th:class="${page.firstPageEnabled} ? '' : 'disabled'">
+                                <span th:if="${not page.firstPageEnabled}">&laquo;</span>
+                                <a th:if="${page.firstPageEnabled}" title="First page"
+                                   href="javascript:void(0);" th:onclick="'javascript:loadReminders(1)'">&laquo;</a>
+                            </li>
+                            <li th:class="${page.previousPageEnabled} ? '' : 'disabled'">
+                                <span th:if="${not page.previousPageEnabled}">&lsaquo;</span>
+                                <a th:if="${page.previousPageEnabled}" title="Previous Page" href="javascript:void(0);"
+                                   th:onclick="'javascript:loadReminders(' + ${page.currentPage - 1} + ')'">&lsaquo;</a>
+                            </li>
+                            <li th:each="item : ${page.items}" th:class="${item.current}? 'active' : ''">
+                                <span th:if="${item.current}" th:text="${item.number}">1</span>
+                                <a th:if="${not item.current}" href="javascript:void(0);" th:onclick="'javascript:loadReminders('+ ${item.number} + ')'">
+                                    <span th:text="${item.number}">1</span>
+                                </a>
+                            </li>
+                            <li th:class="${page.nextPageEnabled}? '' : 'disabled'">
+                                <span th:if="${not page.nextPageEnabled}">&rsaquo;</span>
+                                <a th:if="${page.nextPageEnabled}" title="Go to next page"
+                                   href="javascript:void(0);" th:onclick="'javascript:loadReminders('+ ${page.currentPage + 1} + ')'">&rsaquo;</a>
+                            </li>
+                            <li th:class="${page.lastPageEnabled} ? '' : 'disabled'">
+                                <span th:if="${not page.lastPageEnabled}">&raquo;</span>
+                                <a th:if="${page.lastPageEnabled}" title="Last Page"
+                                   href="javascript:void(0);" th:onclick="'javascript:loadReminders(' + ${page.totalPages} + ')'">&raquo;</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </td>
+    </tr>
+    <tr th:if="${#lists.isEmpty(page.content)}">
+        <td colspan="5">
+            <span th:text="#{table.no.items.found}"></span>
+        </td>
+    </tr>
+</div>
+</body>
+</html>
+
+
