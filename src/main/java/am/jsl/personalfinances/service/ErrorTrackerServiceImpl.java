@@ -1,7 +1,6 @@
 package am.jsl.personalfinances.service;
 
 import am.jsl.personalfinances.log.AppLogger;
-import am.jsl.personalfinances.web.controller.BaseController;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,7 +20,7 @@ import java.util.concurrent.Executors;
 @Service
 public class ErrorTrackerServiceImpl implements ErrorTrackerService {
 
-    protected static final AppLogger log = new AppLogger(BaseController.class);
+    protected static final AppLogger log = new AppLogger(ErrorTrackerServiceImpl.class);
 
     private static final String DEFAULT_SUBJECT = "Error Tracker";
 
