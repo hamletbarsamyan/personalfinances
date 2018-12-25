@@ -193,5 +193,10 @@ function loadAccountsOverview() {
  * Loads pie chart data via ajax.
  */
 function downloadPieChartData() {
+    var canvas = $('#piechart-placeholder').get(0);
+    var dataURL = canvas.toDataURL("image/png");
 
+    var pdf = new jsPDF();
+    pdf.addImage(dataURL, 'PNG', 0, 0);
+    pdf.save("download.pdf");
 }
