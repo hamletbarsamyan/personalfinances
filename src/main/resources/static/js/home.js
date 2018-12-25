@@ -1,5 +1,6 @@
 $pieChartForm = $('#pieChartForm');
 var placeholder = $('#piechart-placeholder').css({'width':'90%' , 'min-height':'250px'});
+var plot;
 
 /**
  * Setup date range picker
@@ -127,7 +128,7 @@ function loadPieChartData() {
  * @param position the position
  */
 function drawPieChart(placeholder, data, position) {
-    $.plot(placeholder, data, {
+    plot = $.plot(placeholder, data, {
         series: {
             pie: {
                 show: true,
@@ -193,10 +194,16 @@ function loadAccountsOverview() {
  * Loads pie chart data via ajax.
  */
 function downloadPieChartData() {
-    var canvas = $('#piechart-placeholder').get(0);
-    var dataURL = canvas.toDataURL("image/png");
+    downloadPdf();
+}
 
-    var pdf = new jsPDF();
-    pdf.addImage(dataURL, 'PNG', 0, 0);
-    pdf.save("download.pdf");
+
+function downloadPdf() {
+    var canvas = plot.getCanvas();
+    var src = canvas.toDataURL("image/png");
+    var pdf = new jsPDF("p", "pt", "a4");
+    pdf.addImage(src, 'PNG', 0, 0);
+    var html = $('#piechart-placeholder').html();
+    pdf.addHTML(html, 10, 10);
+    pdf.save('transactions_chart.pdf');
 }

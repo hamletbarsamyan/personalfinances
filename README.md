@@ -59,4 +59,6 @@ Sample categories:
 
 ![picture](doc/settings.png)
 
+![picture](doc/home.png)
+
 
