@@ -145,6 +145,7 @@ function drawPieChart(placeholder, data, position) {
         },
         legend: {
             show: true,
+            container: '#legendholder',
             position: position || "ne",
             labelBoxBorderColor: null,
             margin:[-30,15],
@@ -191,19 +192,13 @@ function loadAccountsOverview() {
 }
 
 /**
- * Loads pie chart data via ajax.
+ * Downloads pie chart as PDF.
  */
 function downloadPieChartData() {
-    downloadPdf();
-}
-
-
-function downloadPdf() {
     var canvas = plot.getCanvas();
     var src = canvas.toDataURL("image/png");
     var pdf = new jsPDF("p", "pt", "a4");
     pdf.addImage(src, 'PNG', 0, 0);
-    var html = $('#piechart-placeholder').html();
-    pdf.addHTML(html, 10, 10);
+    pdf.fromHTML($('#legendholder').html(), 0, 250);
     pdf.save('transactions_chart.pdf');
 }
