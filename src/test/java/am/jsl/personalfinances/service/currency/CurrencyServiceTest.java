@@ -2,13 +2,14 @@ package am.jsl.personalfinances.service.currency;
 
 import am.jsl.personalfinances.domain.Currency;
 import am.jsl.personalfinances.service.BaseTest;
-import org.junit.Assert;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Contains CurrencyService tests.
@@ -36,7 +37,7 @@ public class CurrencyServiceTest extends BaseTest {
 
         currency = currencyService.getByCode(currency.getCode());
 
-        Assert.assertNotNull(currency);
+        assertNotNull(currency);
         log.info("Finished test for create currency");
     }
 
@@ -58,10 +59,10 @@ public class CurrencyServiceTest extends BaseTest {
         // validate currency
         currency = currencyService.getByCode(currency.getCode());
 
-        Assert.assertNotNull(currency);
+        assertNotNull(currency);
 
-        Assert.assertEquals(name, currency.getName());
-        Assert.assertEquals(symbol, currency.getSymbol());
+        assertEquals(name, currency.getName());
+        assertEquals(symbol, currency.getSymbol());
 
         log.info("Finished test for update currency");
     }
@@ -78,7 +79,7 @@ public class CurrencyServiceTest extends BaseTest {
 
         // validate currency
         currency = currencyService.getByCode(isoCode);
-        Assert.assertNull(currency);
+        assertNull(currency);
 
         log.info("Finished test for delete currency");
     }
@@ -89,7 +90,7 @@ public class CurrencyServiceTest extends BaseTest {
         log.info("Starting test for list currencies");
         List<Currency> currencies = currencyService.list();
 
-        Assert.assertTrue(currencies.size() > 0);
+        assertTrue(currencies.size() > 0);
         log.info("Finished test for list currencies");
     }
 
@@ -99,7 +100,7 @@ public class CurrencyServiceTest extends BaseTest {
         log.info("Starting test for get rate");
         double rate = currencyService.getRate(CURRENCY_EUR, CURRENCY_USD);
 
-        Assert.assertTrue(rate > 1);
+        assertTrue(rate > 1);
         log.info("Finished test for get rate");
     }
 

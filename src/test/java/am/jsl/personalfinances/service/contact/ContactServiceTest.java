@@ -2,7 +2,6 @@ package am.jsl.personalfinances.service.contact;
 
 import am.jsl.personalfinances.domain.Contact;
 import am.jsl.personalfinances.service.BaseTest;
-import org.junit.Assert;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -10,6 +9,8 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Contains ContactService tests.
@@ -39,7 +40,7 @@ public class ContactServiceTest extends BaseTest {
         contact.setUserId(user.getId());
         contactService.create(contact);
 
-        Assert.assertTrue(contact.getId() > 0);
+        assertTrue(contact.getId() > 0);
         log.info("Finished test for create contact");
     }
 
@@ -65,10 +66,10 @@ public class ContactServiceTest extends BaseTest {
         // validate contact
         contact = contactService.get(contact.getId(), contact.getUserId());
 
-        Assert.assertEquals(contactName, contact.getName());
-        Assert.assertEquals(email, contact.getEmail());
-        Assert.assertEquals(phone, contact.getPhone());
-        Assert.assertEquals(description, contact.getDescription());
+        assertEquals(contactName, contact.getName());
+        assertEquals(email, contact.getEmail());
+        assertEquals(phone, contact.getPhone());
+        assertEquals(description, contact.getDescription());
 
         log.info("Finished test for update contact");
     }
@@ -86,7 +87,7 @@ public class ContactServiceTest extends BaseTest {
 
         // validate contact
         contact = contactService.get(contactId, userId);
-        Assert.assertNull(contact);
+        assertNull(contact);
 
         log.info("Finished test for delete contact");
     }
@@ -107,7 +108,7 @@ public class ContactServiceTest extends BaseTest {
 
         List<Contact> contacts = contactService.list(user.getId());
 
-        Assert.assertEquals(1, contacts.size());
+        assertEquals(1, contacts.size());
         log.info("Finished test for list contacts");
     }
 
@@ -127,7 +128,7 @@ public class ContactServiceTest extends BaseTest {
 
         List<Contact> contacts = contactService.lookup(user.getId());
 
-        Assert.assertEquals(1, contacts.size());
+        assertEquals(1, contacts.size());
         log.info("Finished test for lookup contacts");
     }
 

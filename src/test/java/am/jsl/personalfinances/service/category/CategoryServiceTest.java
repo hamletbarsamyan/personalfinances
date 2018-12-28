@@ -3,7 +3,6 @@ package am.jsl.personalfinances.service.category;
 import am.jsl.personalfinances.domain.Category;
 import am.jsl.personalfinances.dto.CategoryDTO;
 import am.jsl.personalfinances.service.BaseTest;
-import org.junit.Assert;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -11,6 +10,8 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Contains CategoryService tests.
@@ -41,7 +42,7 @@ public class CategoryServiceTest extends BaseTest {
         category.setUserId(user.getId());
         categoryService.create(category);
 
-        Assert.assertTrue(category.getId() > 0);
+        assertTrue(category.getId() > 0);
         log.info("Finished test for create category");
     }
 
@@ -69,11 +70,11 @@ public class CategoryServiceTest extends BaseTest {
         // validate category
         category = categoryService.get(category.getId(), category.getUserId());
 
-        Assert.assertEquals(categoryName, category.getName());
-        Assert.assertEquals(icon, category.getIcon());
-        Assert.assertEquals(color, category.getColor());
-        Assert.assertEquals(parentId, category.getParentId());
-        Assert.assertEquals(description, category.getDescription());
+        assertEquals(categoryName, category.getName());
+        assertEquals(icon, category.getIcon());
+        assertEquals(color, category.getColor());
+        assertEquals(parentId, category.getParentId());
+        assertEquals(description, category.getDescription());
 
         log.info("Finished test for update category");
     }
@@ -91,7 +92,7 @@ public class CategoryServiceTest extends BaseTest {
 
         // validate category
         category = categoryService.get(categoryId, userId);
-        Assert.assertNull(category);
+        assertNull(category);
 
         log.info("Finished test for delete category");
     }
@@ -113,7 +114,7 @@ public class CategoryServiceTest extends BaseTest {
 
         List<CategoryDTO> categories = categoryService.getCategories(user.getId());
 
-        Assert.assertEquals(1, categories.size());
+        assertEquals(1, categories.size());
         log.info("Finished test for getCategories");
     }
 
@@ -134,7 +135,7 @@ public class CategoryServiceTest extends BaseTest {
 
         List<Category> categories = categoryService.lookup(user.getId());
 
-        Assert.assertEquals(1, categories.size());
+        assertEquals(1, categories.size());
         log.info("Finished test for lookup categories");
     }
 

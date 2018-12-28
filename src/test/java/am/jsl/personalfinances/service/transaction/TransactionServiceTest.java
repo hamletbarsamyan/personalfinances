@@ -15,13 +15,14 @@ import am.jsl.personalfinances.search.ListPaginatedResult;
 import am.jsl.personalfinances.search.transaction.TransactionByCategorySearchQuery;
 import am.jsl.personalfinances.search.transaction.TransactionSearchQuery;
 import am.jsl.personalfinances.service.BaseTest;
-import org.junit.Assert;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Contains TransactionService tests.
@@ -52,12 +53,12 @@ public class TransactionServiceTest extends BaseTest {
         // create income transaction
         Transaction transaction = createTransaction(account, null, TransactionType.INCOME, income);
 
-        Assert.assertTrue(transaction.getId() > 0);
+        assertTrue(transaction.getId() > 0);
 
         // check if account balance is increased
         account = accountService.get(account.getId(), account.getUserId());
-        Assert.assertEquals("Account balance is not increased",
-                accountInitialBalance + income, account.getBalance(), 0);
+        assertEquals(
+                accountInitialBalance + income, account.getBalance(),  "Account balance is not increased");
 
         log.info("Finished test for create income transaction");
     }
@@ -74,12 +75,12 @@ public class TransactionServiceTest extends BaseTest {
         // create expense transaction
         Transaction transaction = createTransaction(account, null, TransactionType.EXPENSE, expense);
 
-        Assert.assertTrue(transaction.getId() > 0);
+        assertTrue(transaction.getId() > 0);
 
         // check if account balance is decreased
         account = accountService.get(account.getId(), account.getUserId());
-        Assert.assertEquals("Account balance is not decreased",
-                accountInitialBalance - expense, account.getBalance(), 0);
+        assertEquals(
+                accountInitialBalance - expense, account.getBalance(), "Account balance is not decreased");
 
         log.info("Finished test for create expense transaction");
     }
@@ -100,21 +101,21 @@ public class TransactionServiceTest extends BaseTest {
                 TransactionType.TRANSFER, transferAmount);
 
         // validate transaction and accounts
-        Assert.assertTrue(transaction.getId() > 0);
+        assertTrue(transaction.getId() > 0);
 
         Transfer transfer = transaction.getTransfer();
 
-        Assert.assertNotNull("Transfer was not created", transfer);
+        assertNotNull(transfer, "Transfer was not created");
 
         // check if source account balance is decreased
         sourceAccount = accountService.get(sourceAccount.getId(), sourceAccount.getUserId());
-        Assert.assertEquals("Source account balance is not decreased",
-                sourceAccInitBalance - transferAmount, sourceAccount.getBalance(), 0);
+        assertEquals(
+                sourceAccInitBalance - transferAmount, sourceAccount.getBalance(), "Source account balance is not decreased");
 
         // check if target account balance is increased
         targetAccount = accountService.get(targetAccount.getId(), targetAccount.getUserId());
-        Assert.assertEquals("Target account balance is not increased",
-                targetAccInitBalance + transfer.getConvertedAmount(), targetAccount.getBalance(), 0);
+        assertEquals(
+                targetAccInitBalance + transfer.getConvertedAmount(), targetAccount.getBalance(), "Target account balance is not increased");
 
         log.info("Finished test for create transfer transaction");
     }
@@ -144,8 +145,8 @@ public class TransactionServiceTest extends BaseTest {
 
         // check if account balance is increased
         account = accountService.get(account.getId(), account.getUserId());
-        Assert.assertEquals("Account balance is not increased",
-                accountInitialBalance + income, account.getBalance(), 0);
+        assertEquals(
+                accountInitialBalance + income, account.getBalance(), "Account balance is not increased");
 
         log.info("Finished test for create batch transactions");
     }
@@ -164,12 +165,12 @@ public class TransactionServiceTest extends BaseTest {
         // create income transaction
         Transaction transaction = createTransaction(account, null, TransactionType.INCOME, income);
 
-        Assert.assertTrue(transaction.getId() > 0);
+        assertTrue(transaction.getId() > 0);
 
         // check if account balance is increased
         account = accountService.get(account.getId(), account.getUserId());
-        Assert.assertEquals("Account balance is not increased",
-                accountInitialBalance + income, account.getBalance(), 0);
+        assertEquals(
+                accountInitialBalance + income, account.getBalance(), "Account balance is not increased");
 
         // update transaction
         Category newCategory = createCategory();
@@ -185,20 +186,20 @@ public class TransactionServiceTest extends BaseTest {
         // validate transaction
         transaction = transactionService.get(transaction.getId(), transaction.getUserId());
 
-        Assert.assertEquals(newAccount.getId(), transaction.getAccountId());
-        Assert.assertEquals(newCategory.getId(), transaction.getCategoryId());
-        Assert.assertEquals(newAmount, transaction.getAmount(), 0);
-        Assert.assertEquals(newContact.getId(), transaction.getContactId());
+        assertEquals(newAccount.getId(), transaction.getAccountId());
+        assertEquals(newCategory.getId(), transaction.getCategoryId());
+        assertEquals(newAmount, transaction.getAmount());
+        assertEquals(newContact.getId(), transaction.getContactId());
 
         // check if account balance is rolled back, because account was changed
         account = accountService.get(account.getId(), account.getUserId());
-        Assert.assertEquals("Account balance is not decreased",
-                accountInitialBalance, account.getBalance(), 0);
+        assertEquals(
+                accountInitialBalance, account.getBalance(), "Account balance is not decreased");
 
         // check if new account balance is increased
         newAccount = accountService.get(newAccount.getId(), account.getUserId());
-        Assert.assertEquals("Account balance is not increased",
-                newAccountInitialBalance + newAmount, newAccount.getBalance(), 0);
+        assertEquals(
+                newAccountInitialBalance + newAmount, newAccount.getBalance(), "Account balance is not increased");
 
         log.info("Finished test for update income transaction");
     }
@@ -217,12 +218,12 @@ public class TransactionServiceTest extends BaseTest {
         // create expense transaction
         Transaction transaction = createTransaction(account, null, TransactionType.EXPENSE, expense);
 
-        Assert.assertTrue(transaction.getId() > 0);
+        assertTrue(transaction.getId() > 0);
 
         // check if account balance is decreased
         account = accountService.get(account.getId(), account.getUserId());
-        Assert.assertEquals("Account balance is not decreased",
-                accountInitialBalance - expense, account.getBalance(), 0);
+        assertEquals(
+                accountInitialBalance - expense, account.getBalance(), "Account balance is not decreased");
 
         // update transaction
         Category newCategory = createCategory();
@@ -238,20 +239,20 @@ public class TransactionServiceTest extends BaseTest {
         // validate transaction
         transaction = transactionService.get(transaction.getId(), transaction.getUserId());
 
-        Assert.assertEquals(newAccount.getId(), transaction.getAccountId());
-        Assert.assertEquals(newCategory.getId(), transaction.getCategoryId());
-        Assert.assertEquals(newAmount, transaction.getAmount(), 0);
-        Assert.assertEquals(newContact.getId(), transaction.getContactId());
+        assertEquals(newAccount.getId(), transaction.getAccountId());
+        assertEquals(newCategory.getId(), transaction.getCategoryId());
+        assertEquals(newAmount, transaction.getAmount());
+        assertEquals(newContact.getId(), transaction.getContactId());
 
         // check if account balance is rolled back, because account was changed
         account = accountService.get(account.getId(), account.getUserId());
-        Assert.assertEquals("Account balance is not increased",
-                accountInitialBalance, account.getBalance(), 0);
+        assertEquals(
+                accountInitialBalance, account.getBalance(), "Account balance is not increased");
 
         // check if new account balance is decreased
         newAccount = accountService.get(newAccount.getId(), account.getUserId());
-        Assert.assertEquals("Account balance is not decreased",
-                newAccountInitialBalance - newAmount, newAccount.getBalance(), 0);
+        assertEquals(
+                newAccountInitialBalance - newAmount, newAccount.getBalance(), "Account balance is not decreased");
 
         log.info("Finished test for update expense transaction");
     }
@@ -277,21 +278,21 @@ public class TransactionServiceTest extends BaseTest {
                 TransactionType.TRANSFER, transferAmount);
 
         // validate transaction and accounts
-        Assert.assertTrue(transaction.getId() > 0);
+        assertTrue(transaction.getId() > 0);
 
         Transfer transfer = transaction.getTransfer();
 
-        Assert.assertNotNull("Transfer was not created", transfer);
+        assertNotNull(transfer, "Transfer was not created");
 
         // check if source account balance is decreased
         sourceAccount = accountService.get(sourceAccount.getId(), sourceAccount.getUserId());
-        Assert.assertEquals("Source account balance is not decreased",
-                sourceAccInitBalance - transferAmount, sourceAccount.getBalance(), 0);
+        assertEquals(
+                sourceAccInitBalance - transferAmount, sourceAccount.getBalance(), "Source account balance is not decreased");
 
         // check if target account balance is increased
         targetAccount = accountService.get(targetAccount.getId(), targetAccount.getUserId());
-        Assert.assertEquals("Target account balance is not increased",
-                targetAccInitBalance + transfer.getConvertedAmount(), targetAccount.getBalance(), 0);
+        assertEquals(
+                targetAccInitBalance + transfer.getConvertedAmount(), targetAccount.getBalance(), "Target account balance is not increased");
 
 
         // update transaction, change source and target accounts, category, amount contact
@@ -317,30 +318,30 @@ public class TransactionServiceTest extends BaseTest {
         // validate transaction
         transaction = transactionService.get(transaction.getId(), transaction.getUserId());
 
-        Assert.assertEquals(newAccount.getId(), transaction.getAccountId());
-        Assert.assertEquals(newCategory.getId(), transaction.getCategoryId());
-        Assert.assertEquals(newTransferAmount, transaction.getAmount(), 0);
-        Assert.assertEquals(newContact.getId(), transaction.getContactId());
+        assertEquals(newAccount.getId(), transaction.getAccountId());
+        assertEquals(newCategory.getId(), transaction.getCategoryId());
+        assertEquals(newTransferAmount, transaction.getAmount());
+        assertEquals(newContact.getId(), transaction.getContactId());
 
         // check if old account balance is rolled back, because account was changed
         sourceAccount = accountService.get(sourceAccount.getId(), sourceAccount.getUserId());
-        Assert.assertEquals("Old Account balance is not increased",
-                sourceAccInitBalance, sourceAccount.getBalance(), 0);
+        assertEquals(
+                sourceAccInitBalance, sourceAccount.getBalance(), "Old Account balance is not increased");
 
         // check if new account balance is decreased
         newAccount = accountService.get(newAccount.getId(), newAccount.getUserId());
-        Assert.assertEquals("New Account balance is not decreased",
-                newAccInitialBalance - newTransferAmount, newAccount.getBalance(), 0);
+        assertEquals(
+                newAccInitialBalance - newTransferAmount, newAccount.getBalance(), "New Account balance is not decreased");
 
         // check if old target account balance is rolled back, because target account was changed
         targetAccount = accountService.get(targetAccount.getId(), targetAccount.getUserId());
-        Assert.assertEquals("Old Target Account balance is not increased",
-                targetAccInitBalance, targetAccount.getBalance(), 0);
+        assertEquals(
+                targetAccInitBalance, targetAccount.getBalance(), "Old Target Account balance is not increased");
 
         // check if new target account balance is decreased
         newTargetAccount = accountService.get(newTargetAccount.getId(), newTargetAccount.getUserId());
-        Assert.assertEquals("New Target Account balance is not increased",
-                newTargetAccInitBalance + newTransferAmount, newTargetAccount.getBalance(), 0);
+        assertEquals(
+                newTargetAccInitBalance + newTransferAmount, newTargetAccount.getBalance(), "New Target Account balance is not increased");
 
         log.info("Finished test for update transfer transaction");
     }
@@ -362,12 +363,12 @@ public class TransactionServiceTest extends BaseTest {
 
         // validate transaction
         transaction = transactionService.get(transactionId, userId);
-        Assert.assertNull(transaction);
+        assertNull(transaction);
 
         // check if account balance is rolled back
         account = accountService.get(account.getId(), account.getUserId());
-        Assert.assertEquals("Account balance is not rolled back",
-                accountInitialBalance, account.getBalance(), 0);
+        assertEquals(
+                accountInitialBalance, account.getBalance(), "Account balance is not rolled back");
 
         log.info("Finished test for delete expense transaction");
     }
@@ -389,12 +390,12 @@ public class TransactionServiceTest extends BaseTest {
 
         // validate transaction
         transaction = transactionService.get(transactionId, userId);
-        Assert.assertNull(transaction);
+        assertNull(transaction);
 
         // check if account balance is rolled back
         account = accountService.get(account.getId(), account.getUserId());
-        Assert.assertEquals("Account balance is not rolled back",
-                accountInitialBalance, account.getBalance(), 0);
+        assertEquals(
+                accountInitialBalance, account.getBalance(), "Account balance is not rolled back");
 
         log.info("Finished test for delete income transaction");
     }
@@ -415,34 +416,34 @@ public class TransactionServiceTest extends BaseTest {
 
 
         // validate transaction and accounts
-        Assert.assertTrue(transaction.getId() > 0);
+        assertTrue(transaction.getId() > 0);
 
         Transfer transfer = transaction.getTransfer();
 
-        Assert.assertNotNull("Transfer was not created", transfer);
+        assertNotNull(transfer, "Transfer was not created");
 
         // check if source account balance is decreased
         sourceAccount = accountService.get(sourceAccount.getId(), sourceAccount.getUserId());
-        Assert.assertEquals("Source account balance is not decreased",
-                sourceAccInitBalance - transferAmount, sourceAccount.getBalance(), 0);
+        assertEquals(
+                sourceAccInitBalance - transferAmount, sourceAccount.getBalance(), "Source account balance is not decreased");
 
         // check if target account balance is increased
         targetAccount = accountService.get(targetAccount.getId(), targetAccount.getUserId());
-        Assert.assertEquals("Target account balance is not increased",
-                targetAccInitBalance + transfer.getConvertedAmount(), targetAccount.getBalance(), 0);
+        assertEquals(
+                targetAccInitBalance + transfer.getConvertedAmount(), targetAccount.getBalance(), "Target account balance is not increased");
 
         transactionService.delete(transaction.getId(), transaction.getUserId());
 
         // validate transaction
         // check if the balance of source account is rolled back
         sourceAccount = accountService.get(sourceAccount.getId(), sourceAccount.getUserId());
-        Assert.assertEquals("Source Account balance is not rolled back",
-                sourceAccInitBalance, sourceAccount.getBalance(), 0);
+        assertEquals(
+                sourceAccInitBalance, sourceAccount.getBalance(), "Source Account balance is not rolled back");
 
         // check if the balance of target account is rolled back
         targetAccount = accountService.get(targetAccount.getId(), targetAccount.getUserId());
-        Assert.assertEquals("Target Account balance is not rolled back",
-                targetAccInitBalance, targetAccount.getBalance(), 0);
+        assertEquals(
+                targetAccInitBalance, targetAccount.getBalance(), "Target Account balance is not rolled back");
 
         log.info("Finished test for delete transfer transaction");
     }
@@ -466,14 +467,14 @@ public class TransactionServiceTest extends BaseTest {
 
         TransactionSearchResult result = transactionService.search(query);
         ListPaginatedResult<TransactionListDTO> paginatedResult = result.getListPaginatedResult();
-        Assert.assertEquals("Incorrect transaction search result", 1, paginatedResult.getTotal());
+        assertEquals(1, paginatedResult.getTotal(), "Incorrect transaction search result");
 
         query.setAccountId(account1.getId());
         query.setTransactionType(TransactionType.EXPENSE.getValue());
 
         result = transactionService.search(query);
         paginatedResult = result.getListPaginatedResult();
-        Assert.assertEquals("Incorrect transaction search result", 1, paginatedResult.getTotal());
+        assertEquals(1, paginatedResult.getTotal(), "Incorrect transaction search result");
 
         log.info("Finished test for search transactions");
     }
@@ -495,13 +496,13 @@ public class TransactionServiceTest extends BaseTest {
         query.setTransactionType(TransactionType.INCOME.getValue());
 
         TransactionByCategoryResultDTO result = transactionService.search(query);
-        Assert.assertEquals("Incorrect transaction search result", 1, result.getList().size());
+        assertEquals(1, result.getList().size(), "Incorrect transaction search result");
 
         query.setAccountId(account1.getId());
         query.setTransactionType(TransactionType.EXPENSE.getValue());
 
         result = transactionService.search(query);
-        Assert.assertEquals("Incorrect transaction search result", 1, result.getList().size());
+        assertEquals(1, result.getList().size(), "Incorrect transaction search result");
 
         log.info("Finished test for search transactions by category");
     }

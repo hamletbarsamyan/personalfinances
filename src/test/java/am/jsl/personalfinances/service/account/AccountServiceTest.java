@@ -5,7 +5,6 @@ import am.jsl.personalfinances.domain.account.AccountType;
 import am.jsl.personalfinances.dto.account.AccountListDTO;
 import am.jsl.personalfinances.dto.account.AdjustBalanceDTO;
 import am.jsl.personalfinances.service.BaseTest;
-import org.junit.Assert;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -13,6 +12,8 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Contains AccountService tests.
@@ -43,7 +44,7 @@ public class AccountServiceTest extends BaseTest {
         account.setUserId(user.getId());
         accountService.create(account);
 
-        Assert.assertTrue(account.getId() > 0);
+        assertTrue(account.getId() > 0);
         log.info("Finished test for create account");
     }
 
@@ -80,15 +81,15 @@ public class AccountServiceTest extends BaseTest {
         // validate account
         account = accountService.get(account.getId(), account.getUserId());
 
-        Assert.assertEquals(accountName, account.getName());
-        Assert.assertEquals(accountType.getValue(), account.getAccountType());
-        Assert.assertEquals(balance, account.getBalance(), 0);
-        Assert.assertEquals(currency, account.getCurrency());
-        Assert.assertEquals(sortOrder, account.getSortOrder());
-        Assert.assertEquals(active, account.isActive());
-        Assert.assertEquals(icon, account.getIcon());
-        Assert.assertEquals(color, account.getColor());
-        Assert.assertEquals(description, account.getDescription());
+        assertEquals(accountName, account.getName());
+        assertEquals(accountType.getValue(), account.getAccountType());
+        assertEquals(balance, account.getBalance());
+        assertEquals(currency, account.getCurrency());
+        assertEquals(sortOrder, account.getSortOrder());
+        assertEquals(active, account.isActive());
+        assertEquals(icon, account.getIcon());
+        assertEquals(color, account.getColor());
+        assertEquals(description, account.getDescription());
 
         log.info("Finished test for update account");
     }
@@ -106,7 +107,7 @@ public class AccountServiceTest extends BaseTest {
 
         // validate account
         account = accountService.get(accountId, userId);
-        Assert.assertNull(account);
+        assertNull(account);
 
         log.info("Finished test for delete account");
     }
@@ -132,7 +133,7 @@ public class AccountServiceTest extends BaseTest {
         // validate account
         account = accountService.get(account.getId(), account.getUserId());
 
-        Assert.assertEquals(balance, account.getBalance(), 0);
+        assertEquals(balance, account.getBalance());
 
         log.info("Finished test for account updateBalance");
     }
@@ -154,7 +155,7 @@ public class AccountServiceTest extends BaseTest {
 
         List<AccountListDTO> accounts = accountService.getAccounts(user.getId());
 
-        Assert.assertEquals(1, accounts.size());
+        assertEquals(1, accounts.size());
         log.info("Finished test for getAccounts");
     }
 
@@ -168,7 +169,7 @@ public class AccountServiceTest extends BaseTest {
 
         List<AccountListDTO> accounts = accountService.getActiveAccounts(user.getId());
 
-        Assert.assertEquals(0, accounts.size());
+        assertEquals(0, accounts.size());
         log.info("Finished test for getActiveAccounts");
     }
 
@@ -189,7 +190,7 @@ public class AccountServiceTest extends BaseTest {
 
         List<Account> accounts = accountService.lookup(user.getId());
 
-        Assert.assertEquals(1, accounts.size());
+        assertEquals(1, accounts.size());
         log.info("Finished test for lookup accounts");
     }
 

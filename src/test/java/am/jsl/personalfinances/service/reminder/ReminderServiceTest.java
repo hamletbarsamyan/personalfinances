@@ -12,7 +12,6 @@ import am.jsl.personalfinances.dto.reminder.ReminderListDTO;
 import am.jsl.personalfinances.search.ListPaginatedResult;
 import am.jsl.personalfinances.search.reminder.ReminderSearchQuery;
 import am.jsl.personalfinances.service.BaseTest;
-import org.junit.Assert;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -20,6 +19,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Contains ReminderService tests.
@@ -55,12 +56,12 @@ public class ReminderServiceTest extends BaseTest {
         // create autocharge reminder with with past due date
         Reminder reminder = createReminder(account, null, TransactionType.INCOME, amount,
                 LocalDateTime.now().minusHours(1L));
-        Assert.assertTrue(reminder.getId() > 0);
+        assertTrue(reminder.getId() > 0);
 
         // check if account balance is increased
         account = accountService.get(account.getId(), account.getUserId());
-        Assert.assertEquals("Account balance is not increased",
-                accountInitialBalance + amount, account.getBalance(), 0);
+        assertEquals(
+                accountInitialBalance + amount, account.getBalance(), "Account balance is not increased");
 
         log.info("Finished test for create income reminder");
     }
@@ -76,12 +77,12 @@ public class ReminderServiceTest extends BaseTest {
         // create autocharge reminder with with past due date
         Reminder reminder = createReminder(account, null, TransactionType.EXPENSE, amount,
                 LocalDateTime.now().minusHours(1L));
-        Assert.assertTrue(reminder.getId() > 0);
+        assertTrue(reminder.getId() > 0);
 
         // check if account balance is decreased
         account = accountService.get(account.getId(), account.getUserId());
-        Assert.assertEquals("Account balance is not decreased",
-                accountInitialBalance - amount, account.getBalance(), 0);
+        assertEquals(
+                accountInitialBalance - amount, account.getBalance(), "Account balance is not decreased");
 
         log.info("Finished test for create expense reminder");
     }
@@ -99,17 +100,17 @@ public class ReminderServiceTest extends BaseTest {
         // create autocharge reminder with with past due date
         Reminder reminder = createReminder(account, targetAccount, TransactionType.TRANSFER, amount,
                 LocalDateTime.now().minusMinutes(1L));
-        Assert.assertTrue(reminder.getId() > 0);
+        assertTrue(reminder.getId() > 0);
 
         // check if account balance is decreased
         account = accountService.get(account.getId(), account.getUserId());
-        Assert.assertEquals("Account balance is not decreased",
-                accountInitialBalance - amount, account.getBalance(), 0);
+        assertEquals(
+                accountInitialBalance - amount, account.getBalance(), "Account balance is not decreased");
 
         // check if target account balance is increased
         targetAccount = accountService.get(targetAccount.getId(), targetAccount.getUserId());
-        Assert.assertEquals("Account balance is not increased",
-                targetAccountInitialBalance + amount, targetAccount.getBalance(), 0);
+        assertEquals(
+                targetAccountInitialBalance + amount, targetAccount.getBalance(), "Account balance is not increased");
 
         log.info("Finished test for create transfer reminder");
     }
@@ -125,12 +126,12 @@ public class ReminderServiceTest extends BaseTest {
         // create autocharge reminder with with past due date
         Reminder reminder = createReminder(account, null, TransactionType.INCOME, amount,
                 LocalDateTime.now().minusMinutes(1L));
-        Assert.assertTrue(reminder.getId() > 0);
+        assertTrue(reminder.getId() > 0);
 
         // check if account balance is increased
         account = accountService.get(account.getId(), account.getUserId());
-        Assert.assertEquals("Account balance is not increased",
-                accountInitialBalance + amount, account.getBalance(), 0);
+        assertEquals(
+                accountInitialBalance + amount, account.getBalance(), "Account balance is not increased");
 
         Account newAccount = createAccount();
         Category newCategory = createCategory();
@@ -155,14 +156,14 @@ public class ReminderServiceTest extends BaseTest {
         // validate reminder
         reminder = reminderService.get(reminder.getId(), reminder.getUserId());
 
-        Assert.assertEquals(newAccount.getId(), reminder.getAccountId());
-        Assert.assertEquals(newCategory.getId(), reminder.getCategoryId());
-        Assert.assertEquals(newContact.getId(), reminder.getContactId());
-        Assert.assertEquals(newAmount, reminder.getAmount(), 0);
-        Assert.assertEquals(newTransactionType, reminder.getTransactionType());
-        Assert.assertEquals(newAutoCharge, reminder.isAutoCharge());
-        Assert.assertEquals(newRepeat, reminder.getRepeat());
-        Assert.assertEquals(description, reminder.getDescription());
+        assertEquals(newAccount.getId(), reminder.getAccountId());
+        assertEquals(newCategory.getId(), reminder.getCategoryId());
+        assertEquals(newContact.getId(), reminder.getContactId());
+        assertEquals(newAmount, reminder.getAmount());
+        assertEquals(newTransactionType, reminder.getTransactionType());
+        assertEquals(newAutoCharge, reminder.isAutoCharge());
+        assertEquals(newRepeat, reminder.getRepeat());
+        assertEquals(description, reminder.getDescription());
 
         log.info("Finished test for update reminder");
     }
@@ -184,7 +185,7 @@ public class ReminderServiceTest extends BaseTest {
 
         // validate reminder
         reminder = reminderService.get(reminderId, userId);
-        Assert.assertNull(reminder);
+        assertNull(reminder);
 
         log.info("Finished test for delete reminder");
     }
@@ -206,12 +207,12 @@ public class ReminderServiceTest extends BaseTest {
         query.setTransactionType(TransactionType.INCOME.getValue());
 
         ListPaginatedResult<ReminderListDTO> result = reminderService.search(query);
-        Assert.assertEquals("Incorrect reminder search result", 1, result.getTotal());
+        assertEquals( 1, result.getTotal(), "Incorrect reminder search result");
 
         query.setTransactionType(TransactionType.EXPENSE.getValue());
 
         result = reminderService.search(query);
-        Assert.assertEquals("Incorrect reminder search result", 1, result.getTotal());
+        assertEquals( 1, result.getTotal(), "Incorrect reminder search result");
 
         log.info("Finished test for search reminders");
     }

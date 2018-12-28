@@ -10,7 +10,6 @@ import am.jsl.personalfinances.search.user.UserSearchQuery;
 import am.jsl.personalfinances.service.BaseTest;
 import am.jsl.personalfinances.util.Constants;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.junit.Assert;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -20,6 +19,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
 import java.util.Locale;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Contains UserService tests.
@@ -58,7 +59,7 @@ public class UserServiceTest extends BaseTest {
         user.setEnabled(true);
         userService.create(user);
 
-        Assert.assertTrue(user.getId() > 0);
+        assertTrue(user.getId() > 0);
 
         log.info("Finished test for create user");
     }
@@ -78,21 +79,21 @@ public class UserServiceTest extends BaseTest {
 
         // validate user
         user = userService.getUser(user.getId());
-        Assert.assertTrue(user.getId() > 0);
-        Assert.assertFalse(user.isEnabled());
-        Assert.assertEquals(Role.USER, user.getRole());
+        assertTrue(user.getId() > 0);
+        assertFalse(user.isEnabled());
+        assertEquals(Role.USER, user.getRole());
 
         // confirm registration
         VerificationToken verificationToken = userService.getToken(user.getId(), VerificationTokenType.NEW_ACCOUNT);
-        Assert.assertFalse(verificationToken.isExpired());
+        assertFalse(verificationToken.isExpired());
         userService.confirmRegistration(user.getId(), verificationToken.getToken());
 
         // validate user
         user = userService.getUser(user.getId());
-        Assert.assertTrue(user.isEnabled());
+        assertTrue(user.isEnabled());
 
         verificationToken = userService.getToken(user.getId(), VerificationTokenType.NEW_ACCOUNT);
-        Assert.assertTrue(verificationToken.isExpired());
+        assertTrue(verificationToken.isExpired());
 
         log.info("Finished test for register user");
     }
@@ -123,12 +124,12 @@ public class UserServiceTest extends BaseTest {
 
         // validate user
         user = userService.getUser(login);
-        Assert.assertEquals(firstName, user.getFirstName());
-        Assert.assertEquals(lastName, user.getLastName());
-        Assert.assertEquals(email, user.getEmail());
-        Assert.assertEquals(phone, user.getPhone());
-        Assert.assertEquals(status, user.isEnabled());
-        Assert.assertEquals(role, user.getRole());
+        assertEquals(firstName, user.getFirstName());
+        assertEquals(lastName, user.getLastName());
+        assertEquals(email, user.getEmail());
+        assertEquals(phone, user.getPhone());
+        assertEquals(status, user.isEnabled());
+        assertEquals(role, user.getRole());
         log.info("Finished test for update user");
     }
 
@@ -154,12 +155,12 @@ public class UserServiceTest extends BaseTest {
 
         // validate user
         user = userService.getUser(login);
-        Assert.assertEquals(firstName, user.getFirstName());
-        Assert.assertEquals(lastName, user.getLastName());
-        Assert.assertEquals(email, user.getEmail());
-        Assert.assertEquals(phone, user.getPhone());
-        Assert.assertTrue(user.isEnabled());
-        Assert.assertEquals(Role.USER, user.getRole());
+        assertEquals(firstName, user.getFirstName());
+        assertEquals(lastName, user.getLastName());
+        assertEquals(email, user.getEmail());
+        assertEquals(phone, user.getPhone());
+        assertTrue(user.isEnabled());
+        assertEquals(Role.USER, user.getRole());
 
         log.info("Finished test for update user profile");
     }
@@ -175,7 +176,7 @@ public class UserServiceTest extends BaseTest {
         userService.sendPasswordResetMail("", email, Locale.getDefault());
 
         VerificationToken verificationToken = userService.getToken(user.getId(), VerificationTokenType.PASSWORD_RESET);
-        Assert.assertFalse(verificationToken.isExpired());
+        assertFalse(verificationToken.isExpired());
 
         // reset password
         PasswordResetDTO passwordResetDTO = new PasswordResetDTO();
@@ -188,10 +189,10 @@ public class UserServiceTest extends BaseTest {
 
         // validate user
         verificationToken = userService.getToken(user.getId(), VerificationTokenType.PASSWORD_RESET);
-        Assert.assertTrue(verificationToken.isExpired());
+        assertTrue(verificationToken.isExpired());
         user = (User) userService.loadUserByUsername(user.getLogin());
 
-        Assert.assertTrue( passwordEncoder.matches(newPassword, user.getPassword()));
+        assertTrue( passwordEncoder.matches(newPassword, user.getPassword()));
 
         log.info("Finished test for reset password");
     }
@@ -208,7 +209,7 @@ public class UserServiceTest extends BaseTest {
 
         // validate user
         user = userService.get(userId, userId);
-        Assert.assertNull(user);
+        assertNull(user);
 
         log.info("Finished test for delete user");
     }
@@ -221,7 +222,7 @@ public class UserServiceTest extends BaseTest {
         UserSearchQuery query = new UserSearchQuery(1, Constants.PAGE_SIZE);
         ListPaginatedResult<User> result = userService.search(query);
 
-        Assert.assertTrue(result.getTotal() > 0);
+        assertTrue(result.getTotal() > 0);
         log.info("Finished test for search users");
     }
 
