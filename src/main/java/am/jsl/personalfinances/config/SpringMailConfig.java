@@ -3,6 +3,7 @@ package am.jsl.personalfinances.config;
 import am.jsl.personalfinances.util.Constants;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
@@ -24,29 +25,17 @@ import java.util.Properties;
  * @author hamlet
  */
 @Configuration
+@ConfigurationProperties(prefix = "personalfinances.mail")
 public class SpringMailConfig implements ApplicationContextAware {
 
     private static final String JAVA_MAIL_FILE = "classpath:mail/javamail.properties";
 
-    @Value("${mail.server.host}")
     private String host;
-
-    @Value("${mail.server.port}")
-    private String port;
-
-    @Value("${mail.server.protocol}")
+    private Integer port;
     private String protocol;
-
-    @Value("${mail.server.username}")
     private String username;
-
-    @Value("${mail.server.password}")
     private String password;
-
-    @Value("${mailer.from.address}")
-    private String from;
-
-    @Value("${mailer.contact_email}")
+    private String fromAddress;
     private String contactEmail;
 
     private ApplicationContext applicationContext;
@@ -62,7 +51,7 @@ public class SpringMailConfig implements ApplicationContextAware {
         final JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
 
         mailSender.setHost(host);
-        mailSender.setPort(Integer.parseInt(port));
+        mailSender.setPort(port);
         mailSender.setProtocol(protocol);
         mailSender.setUsername(username);
         mailSender.setPassword(password);
@@ -120,4 +109,31 @@ public class SpringMailConfig implements ApplicationContextAware {
         this.applicationContext = applicationContext;
     }
 
+    public void setHost(String host) {
+        this.host = host;
+    }
+
+    public void setPort(Integer port) {
+        this.port = port;
+    }
+
+    public void setProtocol(String protocol) {
+        this.protocol = protocol;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setFromAddress(String fromAddress) {
+        this.fromAddress = fromAddress;
+    }
+
+    public void setContactEmail(String contactEmail) {
+        this.contactEmail = contactEmail;
+    }
 }

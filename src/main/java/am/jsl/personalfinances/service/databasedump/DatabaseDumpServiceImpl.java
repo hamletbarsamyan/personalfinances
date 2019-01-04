@@ -25,19 +25,19 @@ import java.util.zip.ZipOutputStream;
 public class DatabaseDumpServiceImpl implements DatabaseDumpService {
     private static final AppLogger log = new AppLogger(DatabaseDumpServiceImpl.class);
 
-    @Value("${db.export.enabled}")
+    @Value("${personalfinances.db.export.enabled}")
     private boolean exportEnabled = false;
 
-    @Value("${db.export.cmd}")
+    @Value("${personalfinances.db.export.cmd}")
     private String exportCmd;
 
-    @Value("${db.export.file.prefix}")
+    @Value("${personalfinances.db.export.file.prefix}")
     private String exportFilePrefix;
 
-    @Value("${db.export.filedir}")
+    @Value("${personalfinances.db.export.filedir}")
     private String exportFiledir;
 
-    @Value("${db.export.files_count}")
+    @Value("${personalfinances.db.export.files_count}")
     private int exportFilesCount;
 
     @Autowired

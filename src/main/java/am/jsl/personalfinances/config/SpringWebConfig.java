@@ -37,13 +37,13 @@ public class SpringWebConfig  implements WebMvcConfigurer {
     /**
      * User image directory.
      */
-    @Value("${user.img.dir}")
+    @Value("${personalfinances.user.img.dir}")
     private String userImgDir;
 
     /**
      * User html directory.
      */
-    @Value("${user.html.dir}")
+    @Value("${personalfinances.user.html.dir}")
     private String userHtmlDir;
 
     /**

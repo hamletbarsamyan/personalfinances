@@ -29,13 +29,13 @@ public class RootConfig {
     /**
      * Cron expression for database dump job.
      */
-    @Value("${db.export.cronExpression}")
+    @Value("${personalfinances.db.export.cronExpression}")
     private String dbDumpCronExp;
 
     /**
      * Cron expression for reminder processing job.
      */
-    @Value("${reminder.cronExpression}")
+    @Value("${personalfinances.reminder.cronExpression}")
     private String reminderCronExp;
 
     /**

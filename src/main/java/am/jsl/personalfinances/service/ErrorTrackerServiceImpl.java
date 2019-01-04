@@ -24,13 +24,13 @@ public class ErrorTrackerServiceImpl implements ErrorTrackerService {
 
     private static final String DEFAULT_SUBJECT = "Error Tracker";
 
-    @Value("${error_tracker.send.email}")
+    @Value("${personalfinances.error_tracker.send.email}")
     private boolean sendEmail;
 
-    @Value("${error_tracker.email}")
+    @Value("${personalfinances.error_tracker.email}")
     private String trackerEmail;
 
-    @Value("${error_tracker.duplicate.errors.send.interval}")
+    @Value("${personalfinances.error_tracker.duplicate.errors.send.interval}")
     private Long duplicatesSendInterval;
 
     private Map<Integer, LocalDateTime> exceptionCache = new ConcurrentHashMap<>();

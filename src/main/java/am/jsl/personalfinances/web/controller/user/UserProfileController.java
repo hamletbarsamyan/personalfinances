@@ -56,7 +56,7 @@ public class UserProfileController extends BaseController {
     /**
      * The directory where user images are uploaded.
      */
-    @Value("${user.img.dir}")
+    @Value("${personalfinances.user.img.dir}")
     private String userImgDir;
 
     /**

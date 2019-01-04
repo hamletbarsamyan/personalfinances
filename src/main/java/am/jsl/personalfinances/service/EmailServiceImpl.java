@@ -25,10 +25,10 @@ public class EmailServiceImpl implements EmailService {
     private static final String RESET_PASSWORD_TEMPLATE = "html/reset-password";
     private static final String REGISTRATION_TEMPLATE = "html/registration";
 
-    @Value("${mailer.from.address}")
+    @Value("${personalfinances.mail.fromAddress}")
     private String from;
 
-    @Value("${mail.enabled}")
+    @Value("${personalfinances.mail.enabled}")
     private boolean mailEnabled;
 
     @Autowired

@@ -25,13 +25,13 @@ public class BaseServiceImpl<T> implements BaseService<T> {
     /**
      * Flag indicating that user objects should be published as html files.
      */
-    @Value("${user.publish.html}")
+    @Value("${personalfinances.user.publish.html}")
     protected boolean publishHtml;
 
     /**
      * Folder where will be stored user html files.
      */
-    @Value("${user.html.dir}")
+    @Value("${personalfinances.user.html.dir}")
     protected String userHtmlDir;
 
     /**
