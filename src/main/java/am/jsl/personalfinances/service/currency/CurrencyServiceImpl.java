@@ -47,21 +47,21 @@ public class CurrencyServiceImpl extends BaseServiceImpl<Currency> implements Cu
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
-    @Caching(evict = {@CacheEvict(value = "currencies")})
+    @Caching(evict = {@CacheEvict(value = "currencies", allEntries = true)})
     public void delete(String code) {
         currencyDao.delete(code);
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
-    @Caching(evict = {@CacheEvict(value = "currencies")})
+    @Caching(evict = {@CacheEvict(value = "currencies", allEntries = true)})
     public void create(Currency object) throws Exception {
         currencyDao.create(object);
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
-    @Caching(evict = {@CacheEvict(value = "currencies")})
+    @Caching(evict = {@CacheEvict(value = "currencies", allEntries = true)})
     public void update(Currency object) throws Exception {
         currencyDao.update(object);
     }
