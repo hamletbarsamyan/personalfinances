@@ -45,6 +45,7 @@ public class ErrorTrackerServiceImpl implements ErrorTrackerService {
     public void sendError(Exception e) {
         if (!sendEmail) {
             log.info("Email send is disabled for error tracker");
+            return;
         }
 
         try {
