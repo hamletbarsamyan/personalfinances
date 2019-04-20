@@ -100,7 +100,7 @@ public class CurrencyServiceTest extends BaseTest {
         log.info("Starting test for get rate");
         double rate = currencyService.getRate(CURRENCY_EUR, CURRENCY_USD);
 
-        assertTrue(rate > 1);
+        assertTrue(rate >= 1);
         log.info("Finished test for get rate");
     }
 
