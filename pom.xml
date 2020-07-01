@@ -69,7 +69,7 @@
         <!-- Other -->
         <joda-money.version>0.12</joda-money.version>
         <prettytime.version>4.0.2.Final</prettytime.version>
-        <quartz.version>2.3.0</quartz.version>
+        <quartz.version>2.3.2</quartz.version>
         <jsoup.version>1.11.3</jsoup.version>
         <unirest.java.version>1.4.9</unirest.java.version>
         <mail.version>1.4.7</mail.version>
