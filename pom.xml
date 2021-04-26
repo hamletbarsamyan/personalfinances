@@ -64,7 +64,7 @@
 
         <!-- Apache Commons -->
         <commons.lang>3.8.1</commons.lang>
-        <commons.io.version>2.6</commons.io.version>
+        <commons.io.version>2.7</commons.io.version>
 
         <!-- Other -->
         <joda-money.version>0.12</joda-money.version>
