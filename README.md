@@ -10,9 +10,9 @@ PersonalFinances is a personal finance tracker build with:
 
 ### Required softwares
 
-	a) java 1.8
+	a) java 11
 	b) application server - apache-tomcat-Apache 8/9
-	c) database server - mysql 5.5
+	c) database server - mysql 8
 
 ### Running application
  Run the following scripts in setup/db/ folder:

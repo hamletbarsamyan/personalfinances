@@ -24,7 +24,6 @@ public class CustomErrorController implements ErrorController {
      * Returns error view path.
      * @return the error path
      */
-    @Override
     public String getErrorPath() {
         return "/error";
     }

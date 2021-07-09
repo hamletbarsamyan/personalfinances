@@ -18,13 +18,11 @@ import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.web.multipart.support.StandardServletMultipartResolver;
 import org.springframework.web.servlet.config.annotation.*;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
-import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import org.springframework.web.servlet.resource.*;
 import org.thymeleaf.extras.java8time.dialect.Java8TimeDialect;
 import org.thymeleaf.extras.springsecurity5.dialect.SpringSecurityDialect;
 
 import java.nio.charset.Charset;
-import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -33,7 +31,7 @@ import java.util.concurrent.TimeUnit;
  */
 @Configuration
 @EnableWebMvc
-public class SpringWebConfig  implements WebMvcConfigurer {
+public class SpringWebConfig implements WebMvcConfigurer {
     /**
      * User image directory.
      */
@@ -85,7 +83,7 @@ public class SpringWebConfig  implements WebMvcConfigurer {
      */
     @Override
     public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
-        configurer.enable();
+        configurer.enable("personalfinancesDefaultServlet");
     }
 
     /**
@@ -208,17 +206,6 @@ public class SpringWebConfig  implements WebMvcConfigurer {
     public ResourceUrlEncodingFilter resourceUrlEncodingFilter() {
         ResourceUrlEncodingFilter filter = new ResourceUrlEncodingFilter();
         return filter;
-    }
-
-    /**
-     * Creates the {@link SessionLocaleResolver} instance.
-     * @return the SessionLocaleResolver
-     */
-    @Bean
-    public SessionLocaleResolver localeResolver() {
-        SessionLocaleResolver localeResolver = new SessionLocaleResolver();
-        localeResolver.setDefaultLocale(Locale.ENGLISH);
-        return localeResolver;
     }
 
     /**

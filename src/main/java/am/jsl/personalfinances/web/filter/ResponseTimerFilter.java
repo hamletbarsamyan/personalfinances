@@ -22,7 +22,7 @@ public class ResponseTimerFilter implements Filter {
 		long startTime = System.currentTimeMillis();
 		chain.doFilter(request, response);
 		long elapsed = System.currentTimeMillis() - startTime;
-		String name = "servlet";
+		String name = "personalfinancesDefaultServlet";
 
 		if (request instanceof HttpServletRequest) {
 			name = ((HttpServletRequest) request).getRequestURI();

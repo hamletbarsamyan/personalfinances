@@ -11,28 +11,29 @@
     <url>www.personalfinances.am</url>
     <description>Personal Finances Tracker</description>
 
-      <developers>
-    <developer>
-      <id>hamlet</id>
-      <name>Hamlet Barsamyan</name>
-      <email>hamletbarsamyan@gmail.com</email>
-      <roles>
-        <role>architect</role>
-        <role>developer</role>
-      </roles>
-    </developer>
-  </developers>
+    <developers>
+        <developer>
+            <id>hamlet</id>
+            <name>Hamlet Barsamyan</name>
+            <email>hamletbarsamyan@gmail.com</email>
+            <roles>
+                <role>architect</role>
+                <role>developer</role>
+            </roles>
+        </developer>
+    </developers>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.2.6.RELEASE</version>
+        <version>2.5.2</version>
+        <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <spring.boot.version>2.2.6.RELEASE</spring.boot.version>
-        <java.version>1.8</java.version>
+        <spring.boot.version>2.5.2</spring.boot.version>
+        <java.version>11</java.version>
 
         <!-- Database -->
         <mysql.connector-version>8.0.19</mysql.connector-version>
@@ -47,7 +48,7 @@
 
         <!-- Log -->
         <slf4j-version>1.7.5</slf4j-version>
-        <log4j-version>1.2.17</log4j-version>
+        <log4j-version>2.14.1</log4j-version>
 
         <!-- jsp/servlet -->
         <servlet-version>4.0.1</servlet-version>
@@ -122,7 +123,7 @@
             <version>${com.zaxxer.hikaricp.version}</version>
         </dependency>
 
-         <!--Thymeleaf-->
+        <!--Thymeleaf-->
         <dependency>
             <groupId>org.thymeleaf</groupId>
             <artifactId>thymeleaf</artifactId>
@@ -189,10 +190,10 @@
             <scope>runtime</scope>
         </dependency>
         <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
             <version>${log4j-version}</version>
-            <scope>compile</scope>
+            <scope>pom</scope>
             <exclusions>
                 <exclusion>
                     <groupId>javax.jms</groupId>
@@ -247,7 +248,7 @@
             <version>${aspectj-version}</version>
         </dependency>
 
-	<!-- Unirest -->
+        <!-- Unirest -->
 
         <dependency>
             <groupId>com.mashape.unirest</groupId>
@@ -256,7 +257,7 @@
         </dependency>
 
         <!-- Json -->
- 	<dependency>
+        <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
             <version>20140107</version>
