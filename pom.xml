@@ -48,7 +48,7 @@
 
         <!-- Log -->
         <slf4j-version>1.7.5</slf4j-version>
-        <log4j-version>2.14.1</log4j-version>
+        <log4j2.version>2.15.0</log4j2.version>
 
         <!-- jsp/servlet -->
         <servlet-version>4.0.1</servlet-version>
@@ -192,7 +192,7 @@
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-api</artifactId>
-            <version>${log4j-version}</version>
+            <version>${log4j2.version}</version>
             <scope>pom</scope>
             <exclusions>
                 <exclusion>
