@@ -40,7 +40,7 @@
         <com.zaxxer.hikaricp.version>3.4.2</com.zaxxer.hikaricp.version>
 
         <!-- Thymeleaf -->
-        <thymeleaf.version>3.0.11.RELEASE</thymeleaf.version>
+        <thymeleaf.version>3.0.14.RELEASE</thymeleaf.version>
         <thymeleaf-extras-springsecurity5.version>3.0.4.RELEASE</thymeleaf-extras-springsecurity5.version>
         <thymeleaf-extras-java8time.version>3.0.2.RELEASE</thymeleaf-extras-java8time.version>
         <thymeleaf.datatables-version>1.1.0</thymeleaf.datatables-version>
@@ -48,7 +48,7 @@
 
         <!-- Log -->
         <slf4j-version>1.7.5</slf4j-version>
-        <log4j2.version>2.15.0</log4j2.version>
+        <log4j2.version>2.16.0</log4j2.version>
 
         <!-- jsp/servlet -->
         <servlet-version>4.0.1</servlet-version>
@@ -71,7 +71,7 @@
         <joda-money.version>0.12</joda-money.version>
         <prettytime.version>4.0.2.Final</prettytime.version>
         <quartz.version>2.3.2</quartz.version>
-        <jsoup.version>1.11.3</jsoup.version>
+        <jsoup.version>1.14.2</jsoup.version>
         <unirest.java.version>1.4.9</unirest.java.version>
         <mail.version>1.4.7</mail.version>
 
