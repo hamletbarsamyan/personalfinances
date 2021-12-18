@@ -1,7 +1,6 @@
 <html>
 <body>
 <h3>Hi ${user.email}, welcome to ${websiteName}!</h3>
-
 <div>
     To activate your account click the following link:
     <a href="http://${host}/public/activation?mail=${user.email}&code=${securityCode.code}">Application activation</a>.
