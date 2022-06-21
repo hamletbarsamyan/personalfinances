@@ -36,7 +36,7 @@
         <java.version>11</java.version>
 
         <!-- Database -->
-        <mysql.connector-version>8.0.19</mysql.connector-version>
+        <mysql.connector-version>8.0.28</mysql.connector-version>
         <com.zaxxer.hikaricp.version>3.4.2</com.zaxxer.hikaricp.version>
 
         <!-- Thymeleaf -->
