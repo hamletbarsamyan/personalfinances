@@ -61,7 +61,7 @@
 
         <ehcache.version>2.10.3</ehcache.version>
         <javax.validation.version>2.0.1.Final</javax.validation.version>
-        <jackson.version>2.11.0.rc1</jackson.version>
+        <jackson.version>2.12.7.1</jackson.version>
 
         <!-- Apache Commons -->
         <commons.lang>3.8.1</commons.lang>
